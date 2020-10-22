@@ -8,7 +8,6 @@ EXPOSE 443
 FROM mcr.microsoft.com/dotnet/core/sdk:3.1-buster AS build
 WORKDIR /src
 COPY ["authorization-play.Api/authorization-play.Api.csproj", "authorization-play.Api/"]
-COPY ["authorization-play.Core/authorization-play.Core.csproj", "authorization-play.Core/"]
 RUN dotnet restore "authorization-play.Api/authorization-play.Api.csproj"
 COPY . .
 WORKDIR "/src/authorization-play.Api"

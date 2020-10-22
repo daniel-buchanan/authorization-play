@@ -1,0 +1,15 @@
+version: '3.4'
+
+services:
+  authorization-play.api:
+    image: ${DOCKER_REGISTRY-}authorizationplayapi
+    build:
+      context: .
+      dockerfile: authorization-play.Api/Dockerfile
+
+  authorization-play.testapi:
+    image: ${DOCKER_REGISTRY-}authorizationplaytestapi
+    build:
+      context: .
+      dockerfile: authorization-play.TestApi/Dockerfile
+
