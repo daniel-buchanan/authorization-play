@@ -31,6 +31,8 @@ namespace authorization_play.TestApi.Controllers
         [AuthorizePermissionTicket]
         public IEnumerable<WeatherForecast> Get()
         {
+            var x = User;
+
             var rng = new Random();
             return Enumerable.Range(1, 5).Select(index => new WeatherForecast
             {

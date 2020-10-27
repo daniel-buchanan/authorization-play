@@ -12,7 +12,7 @@ namespace authorization_play.Test
         private static PermissionTicket ExistingTicket => PermissionTicket.Create()
             .ForPrincipal(Identities.DanielB)
             .WithExpiry(DateTimeOffset.MinValue.AddMinutes(1))
-            .WithResources(PermissionTicketResource.For(Resources.Farm.Identifier));
+            .WithResources(PermissionTicketResource.ForResource(Resources.Farm.Identifier));
         private const string ExistingJwt =
             "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJpZGVudCI6Im1vYXJuOnVzZXIvNDIiLCJleHAiOjYyMTM1NTk2NzQwLCJyZXNvdXJjZSI6W3sicmVzb3VyY2UiOiJtb2FybjpmYXJtLzEyMzQiLCJzY2hlbWEiOm51bGwsImFjdGlvbiI6W119XX0.agFsZsjx2PLBIocJjP0tqIGuN2Q-N6Rl2BHW7Paiep0NBdDEWitgLEpye75egzQOhmlo39RqT0LwhPB5WarA7Q";
 

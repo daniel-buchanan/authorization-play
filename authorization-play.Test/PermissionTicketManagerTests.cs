@@ -264,7 +264,7 @@ namespace authorization_play.Test
             {
                 PermissionTicket.Create().ForPrincipal(Identities.DanielB)
                     .WithExpiry(DateTimeOffset.UtcNow.AddMinutes(1))
-                    .WithResources(PermissionTicketResource.For(Resources.FarmTwo.Identifier).WithActions(ResourceActions.Iam.Owner).ForSchema(Schemas.MilkPickup)),
+                    .WithResources(PermissionTicketResource.ForResource(Resources.FarmTwo.Identifier).WithActions(ResourceActions.Iam.Owner).ForSchema(Schemas.MilkPickup)),
                 true
             };
 
@@ -272,7 +272,7 @@ namespace authorization_play.Test
             {
                 PermissionTicket.Create().ForPrincipal(Identities.DanielB)
                     .WithExpiry(DateTimeOffset.UtcNow.AddMinutes(1))
-                    .WithResources(PermissionTicketResource.For(Resources.FarmTwo.Identifier).WithActions(ResourceActions.Iam.Owner)),
+                    .WithResources(PermissionTicketResource.ForResource(Resources.FarmTwo.Identifier).WithActions(ResourceActions.Iam.Owner)),
                 false
             };
 

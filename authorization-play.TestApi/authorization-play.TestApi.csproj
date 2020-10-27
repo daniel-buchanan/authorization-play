@@ -19,5 +19,9 @@
     <ProjectReference Include="..\authorization-play.Middleware\authorization-play.Middleware.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Persistance\" />
+  </ItemGroup>
+
 
 </Project>

@@ -29,7 +29,7 @@ namespace authorization_play.Core.Permissions.Models
                                Schema?.IsValid == true &&
                                Actions.Any();
 
-        public static PermissionTicketResource For(MoARN resource) => new PermissionTicketResource()
+        public static PermissionTicketResource ForResource(MoARN resource) => new PermissionTicketResource()
         {
             Identifier = resource
         };

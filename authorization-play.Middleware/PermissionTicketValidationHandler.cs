@@ -41,7 +41,11 @@ namespace authorization_play.Middleware
 
             var token = Request.Headers["X-Permission-Ticket"].ToString();
 
-            var pemTicket = PermissionTicket.FromJwt(token, null);
+            if (string.IsNullOrWhiteSpace(token)) return Task.FromResult(AuthenticateResult.Fail("No Token provided"));
+            var tokenParts = token.Split(".");
+            if (tokenParts.Length != 3) return Task.FromResult(AuthenticateResult.Fail("Not a valid JWT"));
+
+            var pemTicket = PermissionTicket.FromJwt(token, "secret");
 
             if (pemTicket != null)
             {
