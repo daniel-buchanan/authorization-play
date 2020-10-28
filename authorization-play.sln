@@ -11,9 +11,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "authorization-play.Api", "a
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "authorization-play.TestApi", "authorization-play.TestApi\authorization-play.TestApi.csproj", "{01E307AD-E0AC-42E6-8012-0893CA942BD7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "authorization-play.Middleware", "authorization-play.Middleware\authorization-play.Middleware.csproj", "{71715F3C-829C-4E7B-A301-7C68A691742C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "authorization-play.Middleware", "authorization-play.Middleware\authorization-play.Middleware.csproj", "{71715F3C-829C-4E7B-A301-7C68A691742C}"
 EndProject
 Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{84887EE6-E6FB-491B-92AC-57D14B11BC72}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "authorization-play.Persistance", "authorization-play.Persistance\authorization-play.Persistance.csproj", "{41F4487A-B0B7-42DE-B201-1911D6B21B27}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -45,6 +47,10 @@ Global
 		{84887EE6-E6FB-491B-92AC-57D14B11BC72}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{84887EE6-E6FB-491B-92AC-57D14B11BC72}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{84887EE6-E6FB-491B-92AC-57D14B11BC72}.Release|Any CPU.Build.0 = Release|Any CPU
+		{41F4487A-B0B7-42DE-B201-1911D6B21B27}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{41F4487A-B0B7-42DE-B201-1911D6B21B27}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{41F4487A-B0B7-42DE-B201-1911D6B21B27}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{41F4487A-B0B7-42DE-B201-1911D6B21B27}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

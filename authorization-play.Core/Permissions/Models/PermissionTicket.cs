@@ -69,7 +69,7 @@ namespace authorization_play.Core.Permissions.Models
 
                     if (existing == null)
                     {
-                        existing = PermissionTicketResource.For(r).ForSchema(v.Request.Schema).WithActions(v.Request.Action);
+                        existing = PermissionTicketResource.ForResource(r).ForSchema(v.Request.Schema).WithActions(v.Request.Action);
                         resources.Add(existing);
                     }
                     else

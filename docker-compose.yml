@@ -1,6 +1,36 @@
 version: '3.4'
 
+volumes:
+  pgdata-keycloak:
+    external: false
+
 services:
+  authorization-play.keycloak-postgres:
+    container_name: authorization-play.keycloak-postgres
+    restart: always
+    image: ${DOCKER_REGISTRY-}postgres:latest
+    volumes:
+      - pgdata-keycloak:/var/lib/postgresql/data
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: keycloak
+  
+  authorization-play.keycloak:
+    container_name: authorization-play.keycloak
+    image: ${DOCKER_REGISTRY-}jboss/keycloak:latest
+    ports:
+      - "8080:8080"
+      - "8443:8443"
+    environment:
+      KEYCLOAK_USER: admin
+      KEYCLOAK_PASSWORD: admin
+      DB_VENDOR: postgres
+      DB_ADDR: authorization-play.keycloak-postgres:5432
+      DB_DATABASE: keycloak
+      DB_USER: postgres
+      DB_PASSWORD: password
+
   authorization-play.api:
     image: ${DOCKER_REGISTRY-}authorizationplayapi
     build:

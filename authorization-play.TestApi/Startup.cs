@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using authorization_play.Middleware;
 using Microsoft.AspNetCore.Authentication;
@@ -28,6 +29,11 @@ namespace authorization_play.TestApi
                     options.DefaultAuthenticateScheme = "PemTicket";
                     //options.DefaultScheme = "PemTicket";
                 })
+                .AddOpenIdConnect(options =>
+                {
+                    options.MetadataAddress =
+                        "http://authorization-play.keycloak/auth/realms/moa/.well-known/openid-configuration";
+                })
                 .AddPermissionTicketAuthorization();
 
             services.AddSwaggerGen(c =>
@@ -41,6 +47,18 @@ namespace authorization_play.TestApi
                     In = ParameterLocation.Header
                 };
                 c.AddSecurityDefinition("PemTicket", pemTicketScheme);
+                c.AddSecurityDefinition("oauth2", new OpenApiSecurityScheme
+                {
+                    Type = SecuritySchemeType.OAuth2,
+                    OpenIdConnectUrl = new Uri("http://localhost:8080/auth/realms/moa/.well-known/openid-configuration"),
+                    Flows = new OpenApiOAuthFlows()
+                    {
+                        Implicit = new OpenApiOAuthFlow()
+                        {
+                            AuthorizationUrl = new Uri("http://localhost:8080/auth/realms/moa/protocol/openid-connect/auth")
+                        }
+                    }
+                });
                 c.AddSecurityRequirement(new OpenApiSecurityRequirement()
                 {
                     {
@@ -55,6 +73,19 @@ namespace authorization_play.TestApi
                             Name = "X-Permission-Ticket",
                             In = ParameterLocation.Header
                         },
+                        new List<string>()
+                    },
+                    {
+                        new OpenApiSecurityScheme()
+                        {
+                            Reference = new OpenApiReference()
+                            {
+                                Type = ReferenceType.SecurityScheme,
+                                Id = "oauth2"
+                            },
+                            Scheme = "oauth2",
+                            Name = "OAuth"
+                        }, 
                         new List<string>()
                     }
                 });

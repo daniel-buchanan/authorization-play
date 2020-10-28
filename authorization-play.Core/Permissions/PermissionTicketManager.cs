@@ -2,6 +2,7 @@
 using System.Linq;
 using authorization_play.Core.Models;
 using authorization_play.Core.Permissions.Models;
+using Newtonsoft.Json;
 
 namespace authorization_play.Core.Permissions
 {
@@ -17,7 +18,7 @@ namespace authorization_play.Core.Permissions
 
     public class PermissionTicketManager : IPermissionTicketManager
     {
-        private const int DefaultTicketDuration = 30;
+        private const int DefaultTicketDurationMinutes = 30;
         private readonly IPermissionValidator validator;
         private readonly IPermissionTicketStorage storage;
 
@@ -35,7 +36,7 @@ namespace authorization_play.Core.Permissions
             var requestHash = string.Join(".", request.Select(r => r.GetHash()));
 
             var ticket = this.storage.Find(requestHash);
-            var existingTicketExpired = ticket != null && ticket?.IsExpired(DateTimeOffset.UtcNow) == true;
+            var existingTicketExpired = ticket != null && ticket.IsExpired(DateTimeOffset.UtcNow);
 
             if (!existingTicketExpired && ticket != null) return ticket;
             
@@ -46,7 +47,7 @@ namespace authorization_play.Core.Permissions
                 responses[i] = this.validator.Validate(request[i]);
 
             ticket = PermissionTicket.FromValidation(responses);
-            ticket.WithExpiry(DateTimeOffset.UtcNow.AddMinutes(DefaultTicketDuration));
+            ticket.WithExpiry(DateTimeOffset.UtcNow.AddMinutes(DefaultTicketDurationMinutes));
 
             if(ticket.IsValid) this.storage.Add(requestHash, ticket);
 
@@ -75,7 +76,7 @@ namespace authorization_play.Core.Permissions
         {
             var found = this.storage.Find(hash);
             if (found == null) return;
-            this.storage.Remove(hash);
+            Revoke(found);
         }
 
         public void Revoke(PermissionTicket ticket)
@@ -90,7 +91,7 @@ namespace authorization_play.Core.Permissions
             PermissionTicket ticket;
             try
             {
-                ticket = Newtonsoft.Json.JsonConvert.DeserializeObject<PermissionTicket>(input);
+                ticket = JsonConvert.DeserializeObject<PermissionTicket>(input);
             }
             catch
             {
@@ -109,8 +110,9 @@ namespace authorization_play.Core.Permissions
         }
 
         public bool Validate(PermissionTicket ticket) =>
-            ticket?.IsValid == true && 
-            ticket?.IsExpired(DateTimeOffset.UtcNow) == false &&
+            ticket != null &&
+            ticket.IsValid && 
+            !ticket.IsExpired(DateTimeOffset.UtcNow) &&
             this.storage.Find(ticket.GetHash()) != null;
     }
 }

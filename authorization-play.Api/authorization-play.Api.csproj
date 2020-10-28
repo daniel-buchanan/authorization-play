@@ -18,6 +18,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\authorization-play.Core\authorization-play.Core.csproj" />
+    <ProjectReference Include="..\authorization-play.Persistance\authorization-play.Persistance.csproj" />
   </ItemGroup>
 
 
