@@ -8,7 +8,7 @@ namespace authorization_play.Core.Converters
     {
         public override void WriteJson(JsonWriter writer, ResourceAction value, JsonSerializer serializer)
         {
-            if (value == null) return;
+            if (value == default(ResourceAction)) return;
             writer.WriteValue(value.ToString());
         }
 

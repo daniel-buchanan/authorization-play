@@ -6,17 +6,17 @@ using Newtonsoft.Json;
 
 namespace authorization_play.Core.Models
 {
-    [JsonConverter(typeof(MoARNConverter))]
-    public class MoARN
+    [JsonConverter(typeof(CRNConverter))]
+    public class CRN
     {
         private string[] parts = null;
 
-        public MoARN() { }
+        public CRN() { }
 
-        protected MoARN(string value)
+        protected CRN(string value)
         {
             if (string.IsNullOrWhiteSpace(value)) return;
-            if (!value.StartsWith("moarn")) return;
+            if (!value.StartsWith("crn")) return;
 
             IsValid = true;
             Value = value;
@@ -36,7 +36,7 @@ namespace authorization_play.Core.Models
                 if (this.parts != null) return this.parts;
 
                 if(string.IsNullOrWhiteSpace(Value)) return new string[0];
-                if(!Value.StartsWith("moarn")) return new string[0];
+                if(!Value.StartsWith("crn")) return new string[0];
                 var valueParts = Value.Split(':');
                 if(valueParts.Length <= 1) return new string[0];
                 this.parts = valueParts.Skip(1).ToArray();
@@ -44,19 +44,19 @@ namespace authorization_play.Core.Models
             }
         }
 
-        public static MoARN FromParts(params string[] parts)
+        public static CRN FromParts(params string[] parts)
         {
             var combined = string.Join(":", parts);
-            var rn = $"moarn:{combined}";
-            return new MoARN(rn);
+            var rn = $"crn:{combined}";
+            return new CRN(rn);
         }
 
-        public static MoARN FromValue(string value) => new MoARN(value);
+        public static CRN FromValue(string value) => new CRN(value);
 
         public override string ToString()
         {
             if (string.IsNullOrWhiteSpace(Value)) return null;
-            if (!Value.StartsWith("moarn:")) return $"moarn:{Value}";
+            if (!Value.StartsWith("crn:")) return $"crn:{Value}";
             return Value;
         }
 
@@ -69,17 +69,23 @@ namespace authorization_play.Core.Models
             return IdValue.FromValue(value);
         }
 
-        public static bool operator ==(MoARN a, MoARN b) => a?.ToString() == b?.ToString();
+        public static bool operator ==(CRN a, CRN b) => a?.ToString() == b?.ToString();
 
-        public static bool operator !=(MoARN a, MoARN b) => !(a == b);
+        public static bool operator !=(CRN a, CRN b) => !(a == b);
+
+        public static bool operator ==(string a, CRN b) => a == b?.ToString();
+        public static bool operator !=(string a, CRN b) => !(a == b);
+
+        public static bool operator ==(CRN a, string b) => a?.ToString() == b;
+        public static bool operator !=(CRN a, string b) => !(a == b);
 
         public override int GetHashCode() => Value?.GetHashCode() ?? -1;
 
-        public override bool Equals(object obj) => this.Equals(obj as MoARN);
+        public override bool Equals(object obj) => this.Equals(obj as CRN);
 
-        public bool Equals(MoARN resource) => this == resource;
+        public bool Equals(CRN resource) => this == resource;
 
-        public bool IsWildcardMatch(MoARN input)
+        public bool IsWildcardMatch(CRN input)
         {
             if (!IncludesWildcard) return false;
 

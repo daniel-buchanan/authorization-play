@@ -9,13 +9,13 @@ namespace authorization_play.Core.Permissions.Models
     {
         public PermissionValidationResponse()
         {
-            AllowedResources = new List<MoARN>();
-            DeniedResources = new List<MoARN>();
+            AllowedResources = new List<CRN>();
+            DeniedResources = new List<CRN>();
         }
 
         public PermissionRequest Request { get; set; }
-        public List<MoARN> AllowedResources { get; set; }
-        public List<MoARN> DeniedResources { get; set; }
+        public List<CRN> AllowedResources { get; set; }
+        public List<CRN> DeniedResources { get; set; }
 
         public PermissionsValid IsValid
         {
@@ -35,7 +35,7 @@ namespace authorization_play.Core.Permissions.Models
 
         public static PermissionValidationResponse InvalidFromResourceValidation(
             PermissionRequest request,
-            ValidationResult<MoARN, ResourceAction, MoARN> result) =>
+            ValidationResult<CRN, ResourceAction, CRN> result) =>
             new PermissionValidationResponse()
             {
                 Request = request,
@@ -44,12 +44,12 @@ namespace authorization_play.Core.Permissions.Models
 
         public static PermissionValidationResponse From(
             PermissionRequest request,
-            IEnumerable<MoARN> allowed = null,
-            IEnumerable<MoARN> denied = null) =>  new PermissionValidationResponse()
+            IEnumerable<CRN> allowed = null,
+            IEnumerable<CRN> denied = null) =>  new PermissionValidationResponse()
         {
             Request = request,
-            AllowedResources = allowed?.ToList() ?? new List<MoARN>(),
-            DeniedResources = denied?.ToList() ?? new List<MoARN>()
+            AllowedResources = allowed?.ToList() ?? new List<CRN>(),
+            DeniedResources = denied?.ToList() ?? new List<CRN>()
         };
     }
 }

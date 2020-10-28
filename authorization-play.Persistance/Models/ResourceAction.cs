@@ -6,7 +6,7 @@ namespace authorization_play.Persistance.Models
     {
         public int ResourceId { get; set; }
         public Resource Resource { get; set; }
-        public int ResourceActionId { get; set; }
+        public int ActionId { get; set; }
         public Action Action { get; set; }
 
         public static void OnModelCreating(ModelBuilder modelBuilder)
@@ -14,7 +14,7 @@ namespace authorization_play.Persistance.Models
             modelBuilder.Entity<ResourceAction>()
                 .HasKey(r => new
                 {
-                    r.ResourceActionId,
+                    r.ActionId,
                     r.ResourceId
                 });
         }

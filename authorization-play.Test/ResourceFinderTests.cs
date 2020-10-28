@@ -4,6 +4,7 @@ using authorization_play.Core.Models;
 using authorization_play.Core.Resources;
 using authorization_play.Core.Resources.Models;
 using authorization_play.Core.Static;
+using authorization_play.Test.Mocks;
 using FluentAssertions;
 using Xunit;
 
@@ -13,10 +14,10 @@ namespace authorization_play.Test
     {
         [Theory]
         [MemberData(nameof(AllKnownResources))]
-        public void FindSpecificResource(MoARN rn)
+        public void FindSpecificResource(CRN rn)
         {
             // Arrange
-            var storage = new ResourceStorage().Setup();
+            var storage = new MockResourceStorage().Setup();
             var resourceFinder = new ResourceFinder(storage);
 
             // Act
@@ -30,10 +31,10 @@ namespace authorization_play.Test
 
         [Theory]
         [MemberData(nameof(UnknownResources))]
-        public void ResourceNotFound(MoARN rn)
+        public void ResourceNotFound(CRN rn)
         {
             // Arrange
-            var storage = new ResourceStorage().Setup();
+            var storage = new MockResourceStorage().Setup();
             var resourceFinder = new ResourceFinder(storage);
 
             // Act
@@ -45,16 +46,16 @@ namespace authorization_play.Test
 
         public static IEnumerable<object[]> UnknownResources()
         {
-            yield return new object[] { MoARN.FromValue("moarn:farm/1") };
-            yield return new object[] { MoARN.FromValue("moarn:farm/*:herd/8876:*") };
+            yield return new object[] { CRN.FromValue("crn:farm/1") };
+            yield return new object[] { CRN.FromValue("crn:farm/*:herd/8876:*") };
         }
 
         [Theory]
         [MemberData(nameof(WildcardResources))]
-        public void FindResourcesByWildcard(MoARN resource, IEnumerable<Resource> expectedResources)
+        public void FindResourcesByWildcard(CRN resource, IEnumerable<Resource> expectedResources)
         {
             // Arrange
-            var storage = new ResourceStorage().Setup();
+            var storage = new MockResourceStorage().Setup();
             var resourceFinder = new ResourceFinder(storage);
 
             // Act
@@ -68,12 +69,12 @@ namespace authorization_play.Test
         {
             get
             {
-                yield return new object[] { MoARN.FromValue("moarn:farm/*"), new[] { Resources.Farm, Resources.FarmTwo } };
-                yield return new object[] { MoARN.FromValue("moarn:farm/*:*"), new[] { Resources.Farm, Resources.FarmTwo, Resources.Herd, Resources.HerdTwo, Resources.HerdAnimals } };
-                yield return new object[] { MoARN.FromValue("moarn:farm/*:herd/*"), new[] { Resources.Herd, Resources.HerdTwo } };
-                yield return new object[] { MoARN.FromValue("moarn:farm/*:herd/*:*"), new[] { Resources.Herd, Resources.HerdTwo, Resources.HerdAnimals } };
-                yield return new object[] { MoARN.FromValue("moarn:farm/1234:herd/*"), new[] { Resources.Herd, Resources.HerdTwo } };
-                yield return new object[] { MoARN.FromValue("moarn:farm/1234:herd/*:*"), new[] { Resources.Herd, Resources.HerdTwo, Resources.HerdAnimals } };
+                yield return new object[] { CRN.FromValue("crn:farm/*"), new[] { Resources.Farm, Resources.FarmTwo } };
+                yield return new object[] { CRN.FromValue("crn:farm/*:*"), new[] { Resources.Farm, Resources.FarmTwo, Resources.Herd, Resources.HerdTwo, Resources.HerdAnimals } };
+                yield return new object[] { CRN.FromValue("crn:farm/*:herd/*"), new[] { Resources.Herd, Resources.HerdTwo } };
+                yield return new object[] { CRN.FromValue("crn:farm/*:herd/*:*"), new[] { Resources.Herd, Resources.HerdTwo, Resources.HerdAnimals } };
+                yield return new object[] { CRN.FromValue("crn:farm/1234:herd/*"), new[] { Resources.Herd, Resources.HerdTwo } };
+                yield return new object[] { CRN.FromValue("crn:farm/1234:herd/*:*"), new[] { Resources.Herd, Resources.HerdTwo, Resources.HerdAnimals } };
             }
         }
     }

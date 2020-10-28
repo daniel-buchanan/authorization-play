@@ -9,13 +9,13 @@ namespace authorization_play.Core.Resources.Models
     {
         public Resource() { }
 
-        public Resource(MoARN identifier)
+        public Resource(CRN identifier)
         {
             Identifier = identifier;
             ValidActions = new List<ResourceAction>();
         }
 
-        public MoARN Identifier { get; set; }
+        public CRN Identifier { get; set; }
 
         [JsonConverter(typeof(SingleOrArrayConverter<ResourceAction>))]
         public List<ResourceAction> ValidActions { get; set; }
@@ -30,8 +30,8 @@ namespace authorization_play.Core.Resources.Models
 
         public bool Equals(Resource resource) => this == resource;
 
-        public static Resource FromIdentifier(string identifier) => FromIdentifier(MoARN.FromValue(identifier));
-        public static Resource FromIdentifier(MoARN identifier) => new Resource(identifier);
+        public static Resource FromIdentifier(string identifier) => FromIdentifier(CRN.FromValue(identifier));
+        public static Resource FromIdentifier(CRN identifier) => new Resource(identifier);
 
         public Resource WithActions(params ResourceAction[] actions)
         {

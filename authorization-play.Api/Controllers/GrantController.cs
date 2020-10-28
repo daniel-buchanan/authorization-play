@@ -11,13 +11,13 @@ using Swashbuckle.AspNetCore.Annotations;
 namespace authorization_play.Api.Controllers
 {
     [ApiController]
-    [Route("grants")]
-    public class GrantsController : ControllerBase
+    [Route("grant")]
+    public class GrantController : ControllerBase
     {
         private readonly IPermissionGrantStorage storage;
         private readonly IPermissionGrantFinder grantFinder;
 
-        public GrantsController(IPermissionGrantStorage storage,
+        public GrantController(IPermissionGrantStorage storage,
             IPermissionGrantFinder grantFinder)
         {
             this.storage = storage;
@@ -31,11 +31,11 @@ namespace authorization_play.Api.Controllers
         public IActionResult Get([FromRoute] string principal, [FromQuery] string schema = null)
         {
             IEnumerable<PermissionGrant> results = null;
-            var principalRn = MoARN.FromValue(HttpUtility.UrlDecode(principal));
+            var principalRn = CRN.FromValue(HttpUtility.UrlDecode(principal));
             if (schema == null) results = this.grantFinder.Find(principalRn);
             else
             {
-                var schemaRn = MoASchema.FromValue(HttpUtility.UrlDecode(schema));
+                var schemaRn = DataSchema.FromValue(HttpUtility.UrlDecode(schema));
                 results = this.grantFinder.Find(principalRn, schemaRn);
             }
 
@@ -49,7 +49,6 @@ namespace authorization_play.Api.Controllers
         public IActionResult Post(PermissionGrant grant)
         {
             if(grant == null || !grant.IsValid) return BadRequest("Provided grant is invalid");
-            grant.Id = Guid.NewGuid();
             this.storage.Add(grant);
             return Ok(grant);
         }
@@ -57,9 +56,9 @@ namespace authorization_play.Api.Controllers
         [HttpDelete]
         [Route("{id}")]
         [SwaggerResponse(200, "The grant was removed successfully", typeof(string))]
-        public IActionResult Delete(Guid id)
+        public IActionResult Delete(int id)
         {
-            var grant = this.storage.FirstOrDefault(g => g.Id == id);
+            var grant = this.storage.GetById(id);
             this.storage.Remove(grant);
             grant.Id = null;
             return Ok(grant);

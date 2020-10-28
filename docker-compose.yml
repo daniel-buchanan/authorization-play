@@ -3,6 +3,8 @@ version: '3.4'
 volumes:
   pgdata-keycloak:
     external: false
+  pgdata-auth:
+    external: false
 
 services:
   authorization-play.keycloak-postgres:
@@ -30,6 +32,17 @@ services:
       DB_DATABASE: keycloak
       DB_USER: postgres
       DB_PASSWORD: password
+
+  authorization-play.postgres:
+    container_name: authorization-play.postgres
+    restart: always
+    image: ${DOCKER_REGISTRY-}postgres:latest
+    volumes:
+      - pgdata-auth:/var/lib/postgresql/data
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: auth
 
   authorization-play.api:
     image: ${DOCKER_REGISTRY-}authorizationplayapi

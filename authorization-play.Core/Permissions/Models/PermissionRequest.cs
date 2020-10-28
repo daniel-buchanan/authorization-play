@@ -7,10 +7,10 @@ namespace authorization_play.Core.Permissions.Models
 {
     public class PermissionRequest
     {
-        public MoARN Resource { get; set; }
+        public CRN Resource { get; set; }
         public ResourceAction Action { get; set; }
-        public MoARN Principal { get; set; }
-        public MoASchema Schema { get; set; }
+        public CRN Principal { get; set; }
+        public DataSchema Schema { get; set; }
 
         public string GetHash()
         {
@@ -26,10 +26,10 @@ namespace authorization_play.Core.Permissions.Models
 
     public class PermissionValidationRequest
     {
-        public MoARN Resource { get; set; }
+        public CRN Resource { get; set; }
         public ResourceAction Action { get; set; }
-        public MoARN Principal { get; set; }
-        public MoASchema Schema { get; set; }
+        public CRN Principal { get; set; }
+        public DataSchema Schema { get; set; }
 
         public string GetHash()
         {

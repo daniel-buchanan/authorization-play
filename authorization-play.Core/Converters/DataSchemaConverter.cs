@@ -4,20 +4,20 @@ using Newtonsoft.Json;
 
 namespace authorization_play.Core.Converters
 {
-    public class MoASchemaConverter : JsonConverter<MoASchema>
+    public class DataSchemaConverter : JsonConverter<DataSchema>
     {
-        public override void WriteJson(JsonWriter writer, MoASchema value, JsonSerializer serializer)
+        public override void WriteJson(JsonWriter writer, DataSchema value, JsonSerializer serializer)
         {
             if (string.IsNullOrWhiteSpace(value.Value)) return;
             writer.WriteValue(value.ToString());
         }
 
-        public override MoASchema ReadJson(JsonReader reader, Type objectType, MoASchema existingValue, bool hasExistingValue,
+        public override DataSchema ReadJson(JsonReader reader, Type objectType, DataSchema existingValue, bool hasExistingValue,
             JsonSerializer serializer)
         {
             var value = reader.Value as string;
             if (string.IsNullOrWhiteSpace(value)) return null;
-            return MoASchema.FromValue(value);
+            return DataSchema.FromValue(value);
         }
     }
 }

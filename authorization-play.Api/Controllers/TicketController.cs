@@ -7,12 +7,12 @@ namespace authorization_play.Api.Controllers
 {
     [ApiController]
     [Route("ticket")]
-    public class TicketsController : ControllerBase
+    public class TicketController : ControllerBase
     {
         private const string Secret = "secret";
         private readonly IPermissionTicketManager manager;
 
-        public TicketsController(IPermissionTicketStorage storage,
+        public TicketController(IPermissionTicketStorage storage,
             IPermissionTicketManager manager)
         {
             this.manager = manager;

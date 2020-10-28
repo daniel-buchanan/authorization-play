@@ -15,7 +15,7 @@ namespace authorization_play.Core.Static
         public static PermissionGrant DanielMilkPickup => PermissionGrant.For(Identities.DanielB)
             .WithSchema(Schemas.MilkPickup)
             .WithActions(ResourceActions.Iam.Owner)
-            .ForResources(MoARN.FromValue("moarn:farm/*:herd/88756:*"));
+            .ForResources(CRN.FromValue("crn:farm/*:herd/88756:*"));
 
         public static IPermissionGrantStorage Setup(this IPermissionGrantStorage storage)
         {

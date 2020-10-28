@@ -7,8 +7,8 @@ namespace authorization_play.Core.Resources
 {
     public interface IResourceFinder
     {
-        IEnumerable<Resource> Find(MoARN resource);
-        IEnumerable<Resource> Find(IEnumerable<MoARN> resources);
+        IEnumerable<Resource> Find(CRN resource);
+        IEnumerable<Resource> Find(IEnumerable<CRN> resources);
     }
 
     public class ResourceFinder : IResourceFinder
@@ -20,13 +20,16 @@ namespace authorization_play.Core.Resources
             this.storage = storage;
         }
 
-        public IEnumerable<Resource> Find(MoARN resource)
+        public IEnumerable<Resource> Find(CRN resource)
         {
-            if (resource.IncludesWildcard) return FindByWildCard(resource);
-            return this.storage.Where(r => r.Identifier == resource);
+            if (resource.IncludesWildcard)
+            {
+                return this.storage.All().Where(r => resource.IsWildcardMatch(r.Identifier));
+            }
+            return this.storage.FindByIdentifier(resource);
         }
 
-        public IEnumerable<Resource> Find(IEnumerable<MoARN> resources)
+        public IEnumerable<Resource> Find(IEnumerable<CRN> resources)
         {
             var results = new List<Resource>();
             foreach (var res in resources)
@@ -36,16 +39,6 @@ namespace authorization_play.Core.Resources
             }
 
             return results;
-        }
-
-        private IEnumerable<Resource> FindByWildCard(MoARN input)
-        {
-            if (input.IncludesWildcard)
-            {
-                return this.storage.Where(r => input.IsWildcardMatch(r.Identifier));
-            }
-
-            return this.storage.Where(r => r.Identifier == input);
         }
     }
 }

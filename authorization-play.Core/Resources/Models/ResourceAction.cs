@@ -42,6 +42,14 @@ namespace authorization_play.Core.Resources.Models
 
         public static bool operator !=(ResourceAction a, ResourceAction b) => !(a == b);
 
+        public static bool operator ==(string a, ResourceAction b) => a == b?.ToString();
+
+        public static bool operator !=(string a, ResourceAction b) => !(a == b);
+
+        public static bool operator ==(ResourceAction a, string b) => a?.ToString() == b;
+
+        public static bool operator !=(ResourceAction a, string b) => !(a == b);
+
         public override int GetHashCode() => this.value?.GetHashCode() ?? -1;
 
         public override bool Equals(object obj) => this.Equals(obj as ResourceAction);

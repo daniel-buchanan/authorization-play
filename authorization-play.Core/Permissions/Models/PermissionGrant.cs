@@ -11,37 +11,37 @@ namespace authorization_play.Core.Permissions.Models
     public class PermissionGrant
     {
         [JsonProperty("id")]
-        public Guid? Id { get; set; }
+        public int? Id { get; set; }
 
         [JsonProperty("resource")]
-        [JsonConverter(typeof(SingleOrArrayConverter<MoARN>))]
-        public List<MoARN> Resource { get; set; }
+        [JsonConverter(typeof(SingleOrArrayConverter<CRN>))]
+        public List<CRN> Resource { get; set; }
 
         [JsonProperty("tag")]
-        [JsonConverter(typeof(SingleOrArrayConverter<MoARN>))]
-        public List<MoARN> Tag { get; set; }
+        [JsonConverter(typeof(SingleOrArrayConverter<CRN>))]
+        public List<CRN> Tag { get; set; }
         
         [JsonProperty("schema")]
-        public MoASchema Schema { get; set; }
+        public DataSchema Schema { get; set; }
         
         [JsonProperty("ident")]
-        public MoARN Principal { get; set; }
+        public CRN Principal { get; set; }
         
         [JsonProperty("action")]
         [JsonConverter(typeof(SingleOrArrayConverter<ResourceAction>))]
         public List<ResourceAction> Actions { get; set; }
 
-        public static PermissionGrant For(MoARN principal) => new PermissionGrant() { Principal = principal};
+        public static PermissionGrant For(CRN principal) => new PermissionGrant() { Principal = principal};
 
-        public PermissionGrant WithSchema(MoASchema schema)
+        public PermissionGrant WithSchema(DataSchema schema)
         {
             Schema = schema;
             return this;
         }
 
-        public PermissionGrant ForResources(params MoARN[] resources)
+        public PermissionGrant ForResources(params CRN[] resources)
         {
-            Resource = resources?.ToList() ?? new List<MoARN>();
+            Resource = resources?.ToList() ?? new List<CRN>();
             return this;
         }
 
@@ -51,9 +51,9 @@ namespace authorization_play.Core.Permissions.Models
             return this;
         }
 
-        public PermissionGrant ForSources(params MoARN[] sources)
+        public PermissionGrant ForSources(params CRN[] sources)
         {
-            Tag = sources?.ToList() ?? new List<MoARN>();
+            Tag = sources?.ToList() ?? new List<CRN>();
             return this;
         }
 

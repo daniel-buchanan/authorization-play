@@ -22,7 +22,7 @@ namespace authorization_play.Persistance
         public DbSet<Tag> Tags { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder options)
-            => options.UseNpgsql("Data Source=blogging.db");
+            => options.UseNpgsql("Server=authorization-play.postgres;Port=5432;Database=auth;User Id=postgres;Password=password;");
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

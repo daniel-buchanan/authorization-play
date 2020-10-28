@@ -15,10 +15,10 @@ namespace authorization_play.Core.Permissions.Models
         }
 
         [JsonProperty("resource")]
-        public MoARN Identifier { get; set; }
+        public CRN Identifier { get; set; }
 
         [JsonProperty("schema")]
-        public MoASchema Schema { get; set; }
+        public DataSchema Schema { get; set; }
 
         [JsonProperty("action")]
         [JsonConverter(typeof(SingleOrArrayConverter<ResourceAction>))]
@@ -29,12 +29,12 @@ namespace authorization_play.Core.Permissions.Models
                                Schema?.IsValid == true &&
                                Actions.Any();
 
-        public static PermissionTicketResource ForResource(MoARN resource) => new PermissionTicketResource()
+        public static PermissionTicketResource ForResource(CRN resource) => new PermissionTicketResource()
         {
             Identifier = resource
         };
 
-        public PermissionTicketResource ForSchema(MoASchema schema)
+        public PermissionTicketResource ForSchema(DataSchema schema)
         {
             Schema = schema;
             return this;

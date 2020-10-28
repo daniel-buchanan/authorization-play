@@ -9,7 +9,7 @@ namespace authorization_play.Core.Permissions
     public interface IPermissionTicketManager
     {
         PermissionTicket Request(params PermissionRequest[] request);
-        void Revoke(MoARN resource, MoARN principal, MoASchema schema = null);
+        void Revoke(CRN resource, CRN principal, DataSchema schema = null);
         void Revoke(string hash);
         void Revoke(PermissionTicket ticket);
         bool Validate(string input, string secret = null);
@@ -54,7 +54,7 @@ namespace authorization_play.Core.Permissions
             return ticket;
         }
 
-        public void Revoke(MoARN resource, MoARN principal, MoASchema schema = null)
+        public void Revoke(CRN resource, CRN principal, DataSchema schema = null)
         {
             var found = this.storage.FindBy(it =>
                 it.Principal == principal && 
@@ -64,7 +64,7 @@ namespace authorization_play.Core.Permissions
                     return r.Identifier == resource;
                 }));
 
-            if (schema != null)
+            if (schema != default(DataSchema))
                 found = found.Where(f => f.Resources.Any(r => r.Schema == schema));
 
             var keys = found.Select(f => f.GetHash());

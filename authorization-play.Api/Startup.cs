@@ -32,8 +32,8 @@ namespace authorization_play.Api
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<AuthorizationPlayContext>();
-            services.AddSingleton<IResourceStorage, ResourceStorage>();
-            services.AddSingleton<IPermissionGrantStorage, PermissionGrantStorage>();
+            services.AddScoped<IResourceStorage, ResourceStorage>();
+            services.AddScoped<IPermissionGrantStorage, PermissionGrantStorage>();
             services.AddScoped<IResourceFinder, ResourceFinder>();
             services.AddScoped<IResourceValidator, ResourceValidator>();
             services.AddSingleton<IPermissionTicketStorage, PermissionTicketStorage>();

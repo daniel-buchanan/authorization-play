@@ -4,7 +4,7 @@ namespace authorization_play.Core.Static
 {
     public static class Identities
     {
-        public static MoARN Admin => MoARN.FromValue("moarn:user/0");
-        public static MoARN DanielB => MoARN.FromValue("moarn:user/42");
+        public static CRN Admin => CRN.FromValue("crn:user/0");
+        public static CRN DanielB => CRN.FromValue("crn:user/42");
     }
 }

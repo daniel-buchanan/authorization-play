@@ -4,6 +4,7 @@ using authorization_play.Core.Models;
 using authorization_play.Core.Resources;
 using authorization_play.Core.Resources.Models;
 using authorization_play.Core.Static;
+using authorization_play.Test.Mocks;
 using FluentAssertions;
 using Xunit;
 
@@ -16,7 +17,7 @@ namespace authorization_play.Test
         public void AllActionsAreValid(ResourceAction action)
         {
             // Arrange
-            var storage = new ResourceStorage().Setup();
+            var storage = new MockResourceStorage().Setup();
             var resourceValidator = new ResourceValidator(storage);
 
             // Act
@@ -33,7 +34,7 @@ namespace authorization_play.Test
         public void AllResourcesAreValid(Resource resource)
         {
             // Arrange
-            var storage = new ResourceStorage().Setup();
+            var storage = new MockResourceStorage().Setup();
             var resourceValidator = new ResourceValidator(storage);
 
             // Act
@@ -47,10 +48,10 @@ namespace authorization_play.Test
 
         [Theory]
         [MemberData(nameof(InvalidResources))]
-        public void AllResourcesAreInvalid(MoARN resource)
+        public void AllResourcesAreInvalid(CRN resource)
         {
             // Arrange
-            var storage = new ResourceStorage().Setup();
+            var storage = new MockResourceStorage().Setup();
             var resourceValidator = new ResourceValidator(storage);
 
             // Act
@@ -64,24 +65,24 @@ namespace authorization_play.Test
         {
             get
             {
-                yield return new object[] { MoARN.FromValue(string.Empty) };
-                yield return new object[] { MoARN.FromValue("moarn:") };
-                yield return new object[] { MoARN.FromValue("moarn:*") };
-                yield return new object[] { MoARN.FromValue("moarn:farm") };
-                yield return new object[] { MoARN.FromValue("moarn:farm:*") };
-                yield return new object[] { MoARN.FromValue("moarn:farm/*") };
-                yield return new object[] { MoARN.FromValue("moarn:farm/1234:herd:*") };
-                yield return new object[] { MoARN.FromValue("moarn:farm/1234:herd/*") };
-                yield return new object[] { MoARN.FromValue("moarn:farm/1234:*") };
+                yield return new object[] { CRN.FromValue(string.Empty) };
+                yield return new object[] { CRN.FromValue("crn:") };
+                yield return new object[] { CRN.FromValue("crn:*") };
+                yield return new object[] { CRN.FromValue("crn:farm") };
+                yield return new object[] { CRN.FromValue("crn:farm:*") };
+                yield return new object[] { CRN.FromValue("crn:farm/*") };
+                yield return new object[] { CRN.FromValue("crn:farm/1234:herd:*") };
+                yield return new object[] { CRN.FromValue("crn:farm/1234:herd/*") };
+                yield return new object[] { CRN.FromValue("crn:farm/1234:*") };
             }
         }
 
         [Theory]
         [MemberData(nameof(ValidResourcesAndActions))]
-        public void AllActionsValidForResources(MoARN resource, ResourceAction action)
+        public void AllActionsValidForResources(CRN resource, ResourceAction action)
         {
             // Arrange
-            var storage = new ResourceStorage().Setup();
+            var storage = new MockResourceStorage().Setup();
             var resourceValidator = new ResourceValidator(storage);
 
             // Act
@@ -106,10 +107,10 @@ namespace authorization_play.Test
 
         [Theory]
         [MemberData(nameof(InvalidResourcesAndActions))]
-        public void AllActionsInvalidForResources(MoARN resource, ResourceAction action)
+        public void AllActionsInvalidForResources(CRN resource, ResourceAction action)
         {
             // Arrange
-            var storage = new ResourceStorage().Setup();
+            var storage = new MockResourceStorage().Setup();
             var resourceValidator = new ResourceValidator(storage);
 
             // Act

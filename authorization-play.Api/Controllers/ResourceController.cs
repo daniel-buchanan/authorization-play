@@ -1,4 +1,5 @@
-﻿using System.Web;
+﻿using System.Linq;
+using System.Web;
 using authorization_play.Core.Models;
 using authorization_play.Core.Resources;
 using authorization_play.Core.Resources.Models;
@@ -8,12 +9,12 @@ using Swashbuckle.AspNetCore.Annotations;
 namespace authorization_play.Api.Controllers
 {
     [ApiController]
-    [Route("resources")]
-    public class ResourcesController : ControllerBase
+    [Route("resource")]
+    public class ResourceController : ControllerBase
     {
         private readonly IResourceStorage storage;
 
-        public ResourcesController(IResourceStorage storage)
+        public ResourceController(IResourceStorage storage)
         {
             this.storage = storage;
         }
@@ -36,9 +37,9 @@ namespace authorization_play.Api.Controllers
         [SwaggerResponse(404, "The Resource could not be found", typeof(string))]
         public IActionResult Delete(string resource)
         {
-            var resourceName = MoARN.FromValue(HttpUtility.UrlDecode(resource));
+            var resourceName = CRN.FromValue(HttpUtility.UrlDecode(resource));
 
-            var found = this.storage.FirstOrDefault(r => r.Identifier == resourceName);
+            var found = this.storage.FindByIdentifier(resourceName).FirstOrDefault();
 
             if (found == null) return NotFound();
 

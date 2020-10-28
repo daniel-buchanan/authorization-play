@@ -5,6 +5,7 @@ using authorization_play.Core.Permissions;
 using authorization_play.Core.Permissions.Models;
 using authorization_play.Core.Resources;
 using authorization_play.Core.Static;
+using authorization_play.Test.Mocks;
 using FluentAssertions;
 using Newtonsoft.Json;
 using Xunit;
@@ -18,8 +19,8 @@ namespace authorization_play.Test
 
         public PermissionTicketManagerTests()
         {
-            var resourceStorage = new ResourceStorage().Setup();
-            var permissionStorage = new PermissionGrantStorage().Setup();
+            var resourceStorage = new MockResourceStorage().Setup();
+            var permissionStorage = new MockPermissionGrantStorage().Setup();
             var resourceFinder = new ResourceFinder(resourceStorage);
             var resourceValidator = new ResourceValidator(resourceStorage);
             var permissionFinder = new PermissionGrantFinder(permissionStorage);
@@ -70,7 +71,7 @@ namespace authorization_play.Test
                     Action = ResourceActions.Iam.Owner,
                     Principal = Identities.DanielB,
                     Schema = Schemas.MilkPickup,
-                    Resource = MoARN.FromValue("moarn:farm/*:herd/88756")
+                    Resource = CRN.FromValue("crn:farm/*:herd/88756")
                 }
             };
 
@@ -81,7 +82,7 @@ namespace authorization_play.Test
                     Action = ResourceActions.Iam.Owner,
                     Principal = Identities.DanielB,
                     Schema = Schemas.MilkPickup,
-                    Resource = MoARN.FromValue("moarn:farm/*:herd/88756:*")
+                    Resource = CRN.FromValue("crn:farm/*:herd/88756:*")
                 }
             };
 
@@ -92,7 +93,7 @@ namespace authorization_play.Test
                     Action = ResourceActions.Iam.Owner,
                     Principal = Identities.DanielB,
                     Schema = Schemas.MilkPickup,
-                    Resource = MoARN.FromValue("moarn:farm/1234:herd/88756")
+                    Resource = CRN.FromValue("crn:farm/1234:herd/88756")
                 }
             };
 
@@ -103,7 +104,7 @@ namespace authorization_play.Test
                     Action = ResourceActions.Iam.Owner,
                     Principal = Identities.DanielB,
                     Schema = Schemas.MilkPickup,
-                    Resource = MoARN.FromValue("moarn:farm/1234:herd/88756:*")
+                    Resource = CRN.FromValue("crn:farm/1234:herd/88756:*")
                 }
             };
         }
@@ -128,7 +129,7 @@ namespace authorization_play.Test
                     Action = ResourceActions.Iam.Owner,
                     Principal = Identities.DanielB,
                     Schema = Schemas.MilkPickup,
-                    Resource = MoARN.FromValue("moarn:farm/*:herd/8876:*")
+                    Resource = CRN.FromValue("crn:farm/*:herd/8876:*")
                 }
             };
 
@@ -139,7 +140,7 @@ namespace authorization_play.Test
                     Action = ResourceActions.Iam.Owner,
                     Principal = Identities.Admin,
                     Schema = Schemas.MilkPickup,
-                    Resource = MoARN.FromValue("moarn:farm/*:herd/88756")
+                    Resource = CRN.FromValue("crn:farm/*:herd/88756")
                 }
             };
 
@@ -150,7 +151,7 @@ namespace authorization_play.Test
                     Action = ResourceActions.Iam.Delegated,
                     Principal = Identities.DanielB,
                     Schema = Schemas.MilkPickup,
-                    Resource = MoARN.FromValue("moarn:farm/*:herd/88756")
+                    Resource = CRN.FromValue("crn:farm/*:herd/88756")
                 }
             };
 
@@ -161,7 +162,7 @@ namespace authorization_play.Test
                     Action = ResourceActions.Iam.Owner,
                     Principal = Identities.DanielB,
                     Schema = Schemas.NumbersOnProperty,
-                    Resource = MoARN.FromValue("moarn:farm/*:herd/88756")
+                    Resource = CRN.FromValue("crn:farm/*:herd/88756")
                 }
             };
         }
@@ -190,10 +191,10 @@ namespace authorization_play.Test
             yield return new object[] { string.Empty, false };
             yield return new object[] { @"{
                 ""exp"": -62135596740,
-                ""ident"": ""moarn:user/42"",
+                ""ident"": ""crn:user/42"",
                 ""resource"": [
                     {
-                        ""resource"": ""moarn:farm/1234"",
+                        ""resource"": ""crn:farm/1234"",
                         ""schema"": null,
                         ""action"": []
                     }
@@ -201,10 +202,10 @@ namespace authorization_play.Test
             }", false };
             yield return new object[] { @"{
                 ""exp"": 62135596740,
-                ""ident"": ""moarn:user/42"",
+                ""ident"": ""crn:user/42"",
                 ""resource"": [
                     {
-                        ""resource"": ""moarn:farm/1234"",
+                        ""resource"": ""crn:farm/1234"",
                         ""schema"": ""ag-data:farm:milk-pickup"",
                         ""action"": [
                             ""iam:owner""
@@ -233,13 +234,13 @@ namespace authorization_play.Test
         {
             yield return new object[]
             {
-                "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJpZGVudCI6Im1vYXJuOnVzZXIvNDIiLCJleHAiOjYyMTM1NTk2NzQwLCJyZXNvdXJjZSI6W3sicmVzb3VyY2UiOiJtb2FybjpmYXJtLzEyMzQiLCJzY2hlbWEiOiJhZy1kYXRhOmhlcmQ6bWlsay1waWNrdXAiLCJhY3Rpb24iOlsiaWFtOm93bmVyIl19XX0.3g_8A5eqbG2F9MeSeojqXx3ca37ZDO9LaPPfBppKtakfwl9gaVXeZsnD5cdW_GR4vuoCUXfzqH0xI5Psc6SG5w",
+                "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJpZGVudCI6ImNybjp1c2VyLzQyIiwiZXhwIjo2MjEzNTU5Njc0MCwicmVzb3VyY2UiOlt7InJlc291cmNlIjoiY3JuOmZhcm0vMTIzNCIsInNjaGVtYSI6ImFnLWRhdGE6aGVyZDptaWxrLXBpY2t1cCIsImFjdGlvbiI6WyJpYW06b3duZXIiXX1dfQ.qcmDZhOU0gn0toA5woOZDlilcls6DFU8jqp_XkAspZXSrzp3KijCA6bKHSwCkfLZJK-f_JErnGgRSunaZ1tt6g",
                 true
             };
 
             yield return new object[]
             {
-                "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJpZGVudCI6Im1vYXJuOnVzZXIvNDIiLCJleHAiOjYyMTM1NTk2NzQwLCJyZXNvdXJjZSI6W3sicmVzb3VyY2UiOiJtb2FybjpmYXJtLzEyMzQiLCJzY2hlbWEiOm51bGwsImFjdGlvbiI6W119XX0.agFsZsjx2PLBIocJjP0tqIGuN2Q-N6Rl2BHW7Paiep0NBdDEWitgLEpye75egzQOhmlo39RqT0LwhPB5WarA7Q",
+                "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJpZGVudCI6ImNybjp1c2VyLzQyIiwiZXhwIjo2MjEzNTU5Njc0MCwicmVzb3VyY2UiOlt7InJlc291cmNlIjoiY3JuOmZhcm0vMTIzNCIsInNjaGVtYSI6bnVsbCwiYWN0aW9uIjpbXX1dfQ.ECfKAx-0bHusQLel2Ad-L-VlxfbsehylgrTgD0y2u0tTd1XbeyKr5ogcbakC_DKV949MKWFjNC0FMOEWG5mvHQ",
                 false
             };
         }
@@ -288,7 +289,7 @@ namespace authorization_play.Test
         public void TicketIsRevoked()
         {
             // Arrange
-            var resourceMask = MoARN.FromParts("farm/*", "herd/*");
+            var resourceMask = CRN.FromParts("farm/*", "herd/*");
             var ticket = this.manager.Request(new PermissionRequest()
             {
                 Schema = Schemas.MilkPickup,

@@ -29,8 +29,8 @@ namespace authorization_play.Core.Permissions
 
         public PermissionValidationResponse Validate(PermissionValidationRequest request)
         {
-            var allowedResources = new List<MoARN>();
-            var deniedResources = new List<MoARN>();
+            var allowedResources = new List<CRN>();
+            var deniedResources = new List<CRN>();
 
             var requestedResources = this.resourceFinder.Find(request.Resource).ToList();
             if (!Validator.TryValidate(() => ValidateResources(requestedResources, request), out var resourceValidationResult))
@@ -61,21 +61,21 @@ namespace authorization_play.Core.Permissions
             return PermissionValidationResponse.From(request, allowedResources, deniedResources);
         }
 
-        private ValidationResult<MoARN, ResourceAction, MoARN> ValidateResources(IEnumerable<Resource> resources, PermissionRequest request)
+        private ValidationResult<CRN, ResourceAction, CRN> ValidateResources(IEnumerable<Resource> resources, PermissionRequest request)
         {
             foreach (var r in resources)
             {
                 if (!Validator.TryValidate(() => this.resourceValidator.Validate(r.Identifier), out var resultResource))
-                    return ValidationResult<MoARN, ResourceAction, MoARN>.Invalid(r.Identifier, request.Action, request.Principal, resultResource.Reason);
+                    return ValidationResult<CRN, ResourceAction, CRN>.Invalid(r.Identifier, request.Action, request.Principal, resultResource.Reason);
 
                 if (!Validator.TryValidate(() => this.resourceValidator.ValidateAction(request.Action), out var resultAction))
-                    return ValidationResult<MoARN, ResourceAction, MoARN>.Invalid(request.Resource, request.Action, request.Principal, resultAction.Reason);
+                    return ValidationResult<CRN, ResourceAction, CRN>.Invalid(request.Resource, request.Action, request.Principal, resultAction.Reason);
 
                 if (!Validator.TryValidate(() => this.resourceValidator.Validate(r.Identifier, request.Action), out var resultActionOnResource))
-                    return ValidationResult<MoARN, ResourceAction, MoARN>.Invalid(request.Resource, request.Action, request.Principal, resultActionOnResource.Reason);
+                    return ValidationResult<CRN, ResourceAction, CRN>.Invalid(request.Resource, request.Action, request.Principal, resultActionOnResource.Reason);
             }
 
-            return ValidationResult<MoARN, ResourceAction, MoARN>.Valid(request.Resource, request.Action, request.Principal);
+            return ValidationResult<CRN, ResourceAction, CRN>.Valid(request.Resource, request.Action, request.Principal);
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using authorization_play.Core.Permissions;
 using authorization_play.Core.Static;
+using authorization_play.Test.Mocks;
 using FluentAssertions;
 using Xunit;
 
@@ -11,7 +12,7 @@ namespace authorization_play.Test
         public void PermissionNotFound()
         {
             // Arrange
-            var storage = new PermissionGrantStorage().Setup();
+            var storage = new MockPermissionGrantStorage().Setup();
             var permissionFinder = new PermissionGrantFinder(storage);
 
             // Act
@@ -25,7 +26,7 @@ namespace authorization_play.Test
         public void PermissionFound()
         {
             // Arrange
-            var storage = new PermissionGrantStorage().Setup();
+            var storage = new MockPermissionGrantStorage().Setup();
             var permissionFinder = new PermissionGrantFinder(storage);
 
             // Act
@@ -39,7 +40,7 @@ namespace authorization_play.Test
         public void PermissionWithoutSchemaNotFound()
         {
             // Arrange
-            var storage = new PermissionGrantStorage().Setup();
+            var storage = new MockPermissionGrantStorage().Setup();
             var permissionFinder = new PermissionGrantFinder(storage);
 
             // Act
@@ -53,7 +54,7 @@ namespace authorization_play.Test
         public void PermissionWithoutSchemaFound()
         {
             // Arrange
-            var storage = new PermissionGrantStorage().Setup();
+            var storage = new MockPermissionGrantStorage().Setup();
             var permissionFinder = new PermissionGrantFinder(storage);
 
             // Act

@@ -4,7 +4,7 @@ namespace authorization_play.Core.Static
 {
     public static class Schemas
     {
-        public static MoASchema MilkPickup => MoASchema.FromValue("ag-data:herd:milk-pickup");
-        public static MoASchema NumbersOnProperty => MoASchema.FromValue("ag-data:herd:animals:count");
+        public static DataSchema MilkPickup => DataSchema.FromValue("ag-data:herd:milk-pickup");
+        public static DataSchema NumbersOnProperty => DataSchema.FromValue("ag-data:herd:animals:count");
     }
 }

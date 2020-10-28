@@ -7,8 +7,8 @@ namespace authorization_play.Core.Resources
 {
     public interface IResourceValidator
     {
-        ValidationResult<MoARN> Validate(MoARN resource);
-        ValidationResult<MoARN, ResourceAction> Validate(MoARN resource, ResourceAction action);
+        ValidationResult<CRN> Validate(CRN resource);
+        ValidationResult<CRN, ResourceAction> Validate(CRN resource, ResourceAction action);
         ValidationResult<ResourceAction> ValidateAction(ResourceAction action);
     }
 
@@ -27,39 +27,39 @@ namespace authorization_play.Core.Resources
             this.storage = storage;
         }
 
-        public ValidationResult<MoARN> Validate(MoARN resource)
+        public ValidationResult<CRN> Validate(CRN resource)
         {
-            if (!resource.IsValid) return ValidationResult<MoARN>.Invalid(resource, InvalidResourceName);
-            if (resource.Parts.Any(p => p.Contains("*"))) return ValidationResult<MoARN>.Invalid(resource, ResourceNameCannotContainAny);
+            if (!resource.IsValid) return ValidationResult<CRN>.Invalid(resource, InvalidResourceName);
+            if (resource.Parts.Any(p => p.Contains("*"))) return ValidationResult<CRN>.Invalid(resource, ResourceNameCannotContainAny);
 
-            var exists = this.storage.Exists(r => r.Identifier == resource);
-            if(exists) 
-                return ValidationResult<MoARN>.Valid(resource);
+            var exists = this.storage.FindByIdentifier(resource);
+            if(exists?.Any() == true) 
+                return ValidationResult<CRN>.Valid(resource);
 
-            return ValidationResult<MoARN>.Invalid(resource, ResourceDoesNotExist);
+            return ValidationResult<CRN>.Invalid(resource, ResourceDoesNotExist);
         }
 
-        public ValidationResult<MoARN, ResourceAction> Validate(MoARN resource, ResourceAction action)
+        public ValidationResult<CRN, ResourceAction> Validate(CRN resource, ResourceAction action)
         {
             var resourceValid = Validate(resource);
             if (!resourceValid.IsValid) 
-                return ValidationResult<MoARN, ResourceAction>.Invalid(resource, action, resourceValid.Reason);
+                return ValidationResult<CRN, ResourceAction>.Invalid(resource, action, resourceValid.Reason);
 
-            var found = this.storage.FirstOrDefault(r => r.Identifier == resource);
+            var found = this.storage.FindByIdentifier(resource).FirstOrDefault();
             if(found == null)
-                return ValidationResult<MoARN, ResourceAction>.Invalid(resource, action, ResourceDoesNotExist);
+                return ValidationResult<CRN, ResourceAction>.Invalid(resource, action, ResourceDoesNotExist);
 
             if(!found.ValidActions.Contains(action)) 
-                return ValidationResult<MoARN, ResourceAction>.Invalid(resource, action, ActionInvalidForResource);
+                return ValidationResult<CRN, ResourceAction>.Invalid(resource, action, ActionInvalidForResource);
 
-            return ValidationResult<MoARN, ResourceAction>.Valid(resource, action);
+            return ValidationResult<CRN, ResourceAction>.Valid(resource, action);
         }
 
         public ValidationResult<ResourceAction> ValidateAction(ResourceAction action)
         {
             var found = ResourceActions.All().FirstOrDefault(a => a == action);
 
-            if(found != null) 
+            if(found != default(ResourceAction)) 
                 return ValidationResult<ResourceAction>.Valid(action);
 
             return ValidationResult<ResourceAction>.Invalid(action, ActionNotFound);
