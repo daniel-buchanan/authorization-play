@@ -79,6 +79,10 @@ namespace authorization_play.Core.Models
         public static bool operator ==(CRN a, string b) => a?.ToString() == b;
         public static bool operator !=(CRN a, string b) => !(a == b);
 
+        public static implicit operator string(CRN crn) => crn?.ToString();
+
+        public static implicit operator CRN(string value) => CRN.FromValue(value);
+
         public override int GetHashCode() => Value?.GetHashCode() ?? -1;
 
         public override bool Equals(object obj) => this.Equals(obj as CRN);

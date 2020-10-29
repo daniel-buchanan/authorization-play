@@ -29,10 +29,12 @@ namespace authorization_play.Core.Permissions
 
         public void Add(PermissionGrant grant)
         {
-            var principal = this.context.Principals.FirstOrDefault(p => p.CanonicalName == grant.Principal);
-            var schema = this.context.Schemas.FirstOrDefault(s => s.CanonicalName == grant.Schema);
-            var actions = this.context.Actions.Where(a => grant.Actions.Contains(ResourceAction.FromValue(a.CanonicalName)));
-            var resources = this.context.Resources.Where(r => grant.Resource.Contains(CRN.FromValue(r.CanonicalName)));
+            var principal = this.context.Principals.FirstOrDefault(p => p.CanonicalName == grant.Principal.ToString());
+            var schema = this.context.Schemas.FirstOrDefault(s => s.CanonicalName == grant.Schema.ToString());
+            var actionsFromRequest = grant.Actions.Select(a => a.ToString());
+            var actions = this.context.Actions.Where(a => actionsFromRequest.Contains(a.CanonicalName)).ToList();
+            var resourcesFromRequest = grant.Resource.Select(r => r.ToString());
+            var resources = this.context.Resources.Where(r => resourcesFromRequest.Contains(r.CanonicalName)).ToList();
 
             var toAdd = new Persistance.Models.PermissionGrant()
             {
@@ -52,24 +54,25 @@ namespace authorization_play.Core.Permissions
                 Grant = toAdd
             });
 
-            this.context.PermissionGrants.Add(toAdd);
-            this.context.PermissionGrantResourceActions.AddRange(actionsToAdd);
-            this.context.PermissionGrantResources.AddRange(resourcesToAdd);
+            this.context.Add(toAdd);
+            this.context.AddRange(actionsToAdd);
+            this.context.AddRange(resourcesToAdd);
 
             this.context.SaveChanges();
         }
 
         public PermissionGrant GetById(int id)
         {
-            var query = GetQuery();
-            return ToModel(query.FirstOrDefault(g => g.PermissionGrantId == id));
+            var found = GetQuery().FirstOrDefault(g => g.PermissionGrantId == id);
+            if (found == null) return null;
+            return ToModel(found);
         }
 
         public void Remove(PermissionGrant grant)
         {
             var found = this.context.PermissionGrants.FirstOrDefault(g => g.PermissionGrantId == grant.Id);
             if (found == null) return;
-            this.context.PermissionGrants.Remove(found);
+            this.context.Remove(found);
             this.context.SaveChanges();
         }
 
@@ -77,8 +80,10 @@ namespace authorization_play.Core.Permissions
 
         public IEnumerable<PermissionGrant> GetByPrincipalAndSchema(CRN principal, DataSchema schema)
         {
-            var foundPrincipal = this.context.Principals.FirstOrDefault(p => p.CanonicalName == principal);
-            var foundSchema = this.context.Schemas.FirstOrDefault(s => s.CanonicalName == schema);
+            var principalStr = principal?.ToString();
+            var schemaStr = schema?.ToString();
+            var foundPrincipal = this.context.Principals.FirstOrDefault(p => p.CanonicalName == principalStr);
+            var foundSchema = this.context.Schemas.FirstOrDefault(s => s.CanonicalName == schemaStr);
             if (foundPrincipal == null) return new List<PermissionGrant>();
             var query = GetQuery();
             Func<Persistance.Models.PermissionGrant, bool> filter;
@@ -87,7 +92,7 @@ namespace authorization_play.Core.Permissions
             else
                 filter = g => g.PrincipalId == foundPrincipal.PrincipalId;
 
-            return query.Where(filter).Select(ToModel);
+            return query.Where(filter).ToList().Select(ToModel);
         }
 
         private PermissionGrant ToModel(Persistance.Models.PermissionGrant entity)

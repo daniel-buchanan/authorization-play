@@ -136,12 +136,10 @@ namespace authorization_play.Core.Permissions.Models
         public string GetHash()
         {
             var token = ToJwt(HashSecret);
-            using (var hash = new SHA512Managed())
-            {
-                var tokenBytes = Encoding.UTF8.GetBytes(token);
-                var hashBytes = hash.ComputeHash(tokenBytes);
-                return hashBytes.ToHexString();
-            }
+            using var hash = new SHA512Managed();
+            var tokenBytes = Encoding.UTF8.GetBytes(token);
+            var hashBytes = hash.ComputeHash(tokenBytes);
+            return hashBytes.ToHexString();
         }
     }
 }

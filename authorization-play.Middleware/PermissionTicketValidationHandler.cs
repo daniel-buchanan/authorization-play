@@ -1,16 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Net.Http;
 using System.Security.Claims;
 using System.Text;
 using System.Text.Encodings.Web;
 using System.Threading.Tasks;
+using authorization_play.Core;
 using authorization_play.Core.Permissions.Models;
 using authorization_play.Core.Resources.Models;
 using JWT.Builder;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using Newtonsoft.Json;
 
 namespace authorization_play.Middleware
 {
@@ -22,30 +25,48 @@ namespace authorization_play.Middleware
 
     class PermissionTicketValidationHandler : AuthenticationHandler<PermissionTicketAuthenticationSchemeOptions>
     {
+        private readonly IHttpClientFactory httpClientFactory;
+
         public PermissionTicketValidationHandler(
             IOptionsMonitor<PermissionTicketAuthenticationSchemeOptions> options, 
             ILoggerFactory logger, 
             UrlEncoder encoder, 
-            ISystemClock clock) 
+            ISystemClock clock,
+            IHttpClientFactory httpClientFactory) 
             : base(options, logger, encoder, clock)
         {
+            this.httpClientFactory = httpClientFactory;
         }
 
-        protected override Task<AuthenticateResult> HandleAuthenticateAsync()
+        protected override async Task<AuthenticateResult> HandleAuthenticateAsync()
         {
             // validation comes in here
             if (!Request.Headers.ContainsKey("X-Permission-Ticket"))
             {
-                return Task.FromResult(AuthenticateResult.Fail("Header Not Found."));
+                return AuthenticateResult.Fail("Header Not Found.");
             }
 
             var token = Request.Headers["X-Permission-Ticket"].ToString();
 
-            if (string.IsNullOrWhiteSpace(token)) return Task.FromResult(AuthenticateResult.Fail("No Token provided"));
+            if (string.IsNullOrWhiteSpace(token)) return AuthenticateResult.Fail("No Token provided");
             var tokenParts = token.Split(".");
-            if (tokenParts.Length != 3) return Task.FromResult(AuthenticateResult.Fail("Not a valid JWT"));
+            if (tokenParts.Length != 3) return AuthenticateResult.Fail("Not a valid JWT");
 
-            var pemTicket = PermissionTicket.FromJwt(token, "secret");
+            PermissionTicket pemTicket;
+
+            try
+            {
+                pemTicket = PermissionTicket.FromJwt(token, "secret");
+            }
+            catch (JWT.Exceptions.SignatureVerificationException sigVerifyEx)
+            {
+                return AuthenticateResult.Fail("Not a valid JWT");
+            }
+
+            using var client = this.httpClientFactory.CreateClient("Test");
+            var tokenJson = JsonConvert.SerializeObject(pemTicket);
+            var result = await client.PostAsync(new Uri("https://authorization-play.Api/ticket/validate"), new StringContent(tokenJson, Encoding.UTF8, "application/json"));
+            if(!result.IsSuccessStatusCode) return AuthenticateResult.Fail("Invalid Ticket");
 
             if (pemTicket != null)
             {
@@ -59,8 +80,7 @@ namespace authorization_play.Middleware
                     new Claim(ClaimTypes.Expiration, pemTicket.Expiry.ToUnixTimeSeconds().ToString())
                 };
 
-                foreach(var r in pemTicket.Resources)
-                    claims.Add(GetClaimForResource(r));
+                AddResourceClaims(claims, pemTicket.Resources);
 
                 // generate claimsIdentity on the name of the class
                 var claimsIdentity = new ClaimsIdentity(claims,
@@ -72,17 +92,21 @@ namespace authorization_play.Middleware
                     new ClaimsPrincipal(claimsIdentity), this.Scheme.Name);
 
                 // pass on the ticket to the middleware
-                return Task.FromResult(AuthenticateResult.Success(ticket));
+                return AuthenticateResult.Success(ticket);
             }
 
-            return Task.FromResult(AuthenticateResult.Fail("Model is Empty"));
+            return AuthenticateResult.Fail("Model is Empty");
         }
 
-        private Claim GetClaimForResource(PermissionTicketResource r)
+        private void AddResourceClaims(List<Claim> claims, List<PermissionTicketResource> resources)
         {
-            var name = $"{r.Identifier}[on]{r.Schema}";
-            var actions = string.Join(";", r.Actions);
-            return new Claim(name, actions);
+            for (var i = 0; i < resources.Count; i++)
+            {
+                var json = JsonConvert.SerializeObject(resources[i]);
+                var base64Encoded = json.ToBase64Encoded();
+                var claimName = $"resource[{i}]";
+                claims.Add(new Claim(claimName, base64Encoded));
+            }
         }
     }
 }

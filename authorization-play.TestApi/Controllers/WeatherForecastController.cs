@@ -1,7 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
+using authorization_play.Core.Models;
+using authorization_play.Core.Resources.Models;
 using authorization_play.Middleware;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -29,18 +32,25 @@ namespace authorization_play.TestApi.Controllers
         [HttpGet]
         //[Authorize]
         [AuthorizePermissionTicket]
-        public IEnumerable<WeatherForecast> Get()
+        public IActionResult Get()
         {
-            var x = User;
+            // somehow determine what the resource, action and schema are
+            var resource = CRN.FromValue("crn:farm/*");
+            var action = ResourceAction.FromValue("iam:owner");
+            var schema = DataSchema.FromValue("ag-data:farm");
+
+            // validate permissions
+            var permissionsValid = this.ValidatePermissions(resource, action, schema);
+            if (!permissionsValid) return Forbid();
 
             var rng = new Random();
-            return Enumerable.Range(1, 5).Select(index => new WeatherForecast
-            {
-                Date = DateTime.Now.AddDays(index),
-                TemperatureC = rng.Next(-20, 55),
-                Summary = Summaries[rng.Next(Summaries.Length)]
-            })
-            .ToArray();
+            return Ok(Enumerable.Range(1, 5).Select(index => new WeatherForecast
+                {
+                    Date = DateTime.Now.AddDays(index),
+                    TemperatureC = rng.Next(-20, 55),
+                    Summary = Summaries[rng.Next(Summaries.Length)]
+                })
+                .ToArray());
         }
     }
 }

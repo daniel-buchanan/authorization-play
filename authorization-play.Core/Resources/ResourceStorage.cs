@@ -40,23 +40,23 @@ namespace authorization_play.Core.Resources
                 Action = a
             });
 
-            this.context.Resources.Add(toAdd);
-            this.context.ResourceActions.AddRange(actions);
+            this.context.Add(toAdd);
+            this.context.AddRange(actions);
 
             this.context.SaveChanges();
         }
 
-        public IEnumerable<Resource> FindByIdentifier(CRN identifier) => GetQuery().Where(r => r.CanonicalName == identifier).AsEnumerable().Select(ToModel);
+        public IEnumerable<Resource> FindByIdentifier(CRN identifier) => GetQuery().Where(r => r.CanonicalName == identifier.ToString()).ToList().Select(ToModel);
         
         public void Remove(Resource resource)
         {
-            var existing = this.context.Resources.FirstOrDefault(r => r.CanonicalName == resource.Identifier);
+            var existing = this.context.Resources.FirstOrDefault(r => r.CanonicalName == resource.Identifier.ToString());
             if (existing == null) return;
             this.context.Remove(existing);
             this.context.SaveChanges();
         }
 
-        public IEnumerable<Resource> All() => GetQuery().AsEnumerable().Select(ToModel);
+        public IEnumerable<Resource> All() => GetQuery().ToList().Select(ToModel);
 
         private Resource ToModel(Persistance.Models.Resource resource)
         {
@@ -67,6 +67,8 @@ namespace authorization_play.Core.Resources
             };
         }
 
-        private IQueryable<Persistance.Models.Resource> GetQuery() => this.context.Resources.Include(r => r.Actions);
+        private IQueryable<Persistance.Models.Resource> GetQuery() => this.context.Resources
+            .Include(r => r.Actions)
+            .ThenInclude(a => a.Action);
     }
 }
