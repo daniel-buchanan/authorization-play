@@ -55,7 +55,7 @@ namespace authorization_play.Middleware
             if(pemTicket == null) 
                 return AuthenticateResult.Fail("Not a valid JWT");
 
-            if (await ValidateToken(pemTicket)) 
+            if (!await ValidateToken(pemTicket)) 
                 return AuthenticateResult.Fail("Not a valid Token");
 
             var claimsIdentity = GetClaimsIdentity(pemTicket);
