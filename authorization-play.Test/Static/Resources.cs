@@ -2,7 +2,7 @@
 using authorization_play.Core.Resources;
 using authorization_play.Core.Resources.Models;
 
-namespace authorization_play.Core.Static
+namespace authorization_play.Test.Static
 {
     public static class Resources
     {
@@ -25,6 +25,9 @@ namespace authorization_play.Core.Static
         {
             foreach(var r in All())
                 storage.Add(r);
+
+            foreach(var a in ResourceActions.All())
+                storage.AddAction(a);
 
             return storage;
         }

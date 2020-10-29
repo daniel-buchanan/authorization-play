@@ -3,7 +3,7 @@ using authorization_play.Core.Models;
 using authorization_play.Core.Permissions;
 using authorization_play.Core.Permissions.Models;
 
-namespace authorization_play.Core.Static
+namespace authorization_play.Test.Static
 {
     public static class Permissions
     {

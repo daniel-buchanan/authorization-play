@@ -1,6 +1,6 @@
 ﻿using System;
 using authorization_play.Core.Permissions.Models;
-using authorization_play.Core.Static;
+using authorization_play.Test.Static;
 using FluentAssertions;
 using Newtonsoft.Json;
 using Xunit;

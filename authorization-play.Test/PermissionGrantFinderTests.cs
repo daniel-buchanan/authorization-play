@@ -1,6 +1,6 @@
 ﻿using authorization_play.Core.Permissions;
-using authorization_play.Core.Static;
 using authorization_play.Test.Mocks;
+using authorization_play.Test.Static;
 using FluentAssertions;
 using Xunit;
 
