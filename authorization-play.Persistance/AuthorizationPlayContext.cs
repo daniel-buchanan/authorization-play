@@ -14,12 +14,17 @@ namespace authorization_play.Persistance
         public DbSet<PermissionGrantResourceAction> PermissionGrantResourceActions { get; set; }
         public DbSet<PermissionGrantTag> PermissionGrantTags { get; set; }
         public DbSet<Principal> Principals { get; set; }
+        public DbSet<PrincipalRelation> PrincipalRelations { get; set; }
         public DbSet<Resource> Resources { get; set; }
         public DbSet<ResourceKind> ResourceKinds { get; set; }
         public DbSet<ResourceAction> ResourceActions { get; set; }
         public DbSet<Action> Actions { get; set; }
         public DbSet<Schema> Schemas { get; set; }
         public DbSet<Tag> Tags { get; set; }
+        public DbSet<DataProvider> DataProviders { get; set; }
+        public DbSet<DataSource> DataSources { get; set; }
+        public DbSet<DataProviderPolicy> DataProviderPolicies { get; set; }
+        public DbSet<DataProviderPolicyItem> DataProviderPolicyItems { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder options)
             => options.UseNpgsql("Server=authorization-play.postgres;Port=5432;Database=auth;User Id=postgres;Password=password;");
@@ -27,6 +32,8 @@ namespace authorization_play.Persistance
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             ResourceAction.OnModelCreating(modelBuilder);
+            DataProviderPolicyItem.OnModelCreating(modelBuilder);
+            PrincipalRelation.OnModelCreating(modelBuilder);
 
             DelegationGrantResource.OnModelCreating(modelBuilder);
             DelegationGrantResourceAction.OnModelCreating(modelBuilder);

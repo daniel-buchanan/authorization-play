@@ -9,7 +9,6 @@ using authorization_play.Middleware;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using Swashbuckle.AspNetCore.Annotations;
 
 namespace authorization_play.TestApi.Controllers
 {
