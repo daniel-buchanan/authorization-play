@@ -1,20 +1,13 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using authorization_play.Core.DataProviders;
 using authorization_play.Core.Permissions;
-using authorization_play.Core.Permissions.Models;
 using authorization_play.Core.Resources;
 using authorization_play.Persistance;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
 
 namespace authorization_play.Api
@@ -32,6 +25,8 @@ namespace authorization_play.Api
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<AuthorizationPlayContext>();
+            services.AddScoped<IDataProviderStorage, DataProviderStorage>();
+            services.AddScoped<IDataProviderPolicyApplicator, DataProviderPolicyApplicator>();
             services.AddScoped<IResourceStorage, ResourceStorage>();
             services.AddScoped<IPermissionGrantStorage, PermissionGrantStorage>();
             services.AddScoped<IResourceFinder, ResourceFinder>();
@@ -40,6 +35,7 @@ namespace authorization_play.Api
             services.AddScoped<IPermissionValidator, PermissionValidator>();
             services.AddScoped<IPermissionGrantFinder, PermissionGrantFinder>();
             services.AddScoped<IPermissionTicketManager, PermissionTicketManager>();
+            services.AddScoped<IPermissionGrantManager, PermissionGrantManager>();
             services.AddControllers().AddNewtonsoftJson();
 
             services.AddSwaggerGen(c =>
@@ -60,16 +56,12 @@ namespace authorization_play.Api
             context.Database.Migrate();
 
             app.UseHttpsRedirection();
-
             app.UseRouting();
-
             app.UseAuthorization();
-
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
             });
-
             app.UseSwagger();
             app.UseSwaggerUI(c =>
             {
