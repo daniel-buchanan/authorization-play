@@ -5,7 +5,7 @@ namespace authorization_play.Core.DataProviders
 {
     public interface IDataProviderPolicyApplicator
     {
-        bool GrantValid(PermissionGrant grant);
+        bool IsGrantValid(PermissionGrant grant);
     }
 
     public class DataProviderPolicyApplicator : IDataProviderPolicyApplicator
@@ -17,7 +17,7 @@ namespace authorization_play.Core.DataProviders
             this.storage = storage;
         }
 
-        public bool GrantValid(PermissionGrant grant)
+        public bool IsGrantValid(PermissionGrant grant)
         {
             if (grant.Tag == null || !grant.Tag.Any()) return true;
 

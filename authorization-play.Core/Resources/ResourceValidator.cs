@@ -1,7 +1,6 @@
 ﻿using System.Linq;
 using authorization_play.Core.Models;
 using authorization_play.Core.Resources.Models;
-using authorization_play.Core.Static;
 
 namespace authorization_play.Core.Resources
 {
@@ -57,7 +56,7 @@ namespace authorization_play.Core.Resources
 
         public ValidationResult<ResourceAction> ValidateAction(ResourceAction action)
         {
-            var found = ResourceActions.All().FirstOrDefault(a => a == action);
+            var found = this.storage.AllActions().FirstOrDefault(a => a == action);
 
             if(found != default(ResourceAction)) 
                 return ValidationResult<ResourceAction>.Valid(action);

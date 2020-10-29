@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using authorization_play.Core.Models;
 using authorization_play.Core.Resources.Models;
@@ -12,6 +11,8 @@ namespace authorization_play.Core.Resources
     {
         IEnumerable<Resource> All();
         void Add(Resource resource);
+        void AddAction(ResourceAction action);
+        IEnumerable<ResourceAction> AllActions();
         IEnumerable<Resource> FindByIdentifier(CRN identifier);
         void Remove(Resource resource);
     }
@@ -45,6 +46,21 @@ namespace authorization_play.Core.Resources
 
             this.context.SaveChanges();
         }
+
+        public void AddAction(ResourceAction action)
+        {
+            var toAdd = new Persistance.Models.Action()
+            {
+                Category = action.Category,
+                Name = action.Action,
+                CanonicalName = action.ToString()
+            };
+            this.context.Add(toAdd);
+            this.context.SaveChanges();
+        }
+
+        public IEnumerable<ResourceAction> AllActions() =>
+            this.context.Actions.ToList().Select(a => ResourceAction.FromValue(a.CanonicalName));
 
         public IEnumerable<Resource> FindByIdentifier(CRN identifier) => GetQuery().Where(r => r.CanonicalName == identifier.ToString()).ToList().Select(ToModel);
         

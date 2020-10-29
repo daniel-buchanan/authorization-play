@@ -25,7 +25,7 @@ namespace authorization_play.Core.Permissions
         public bool Add(PermissionGrant grant)
         {
             if (!grant.IsValid) return false;
-            var allowedByPolicy = this.applicator.GrantValid(grant);
+            var allowedByPolicy = this.applicator.IsGrantValid(grant);
             if(allowedByPolicy) this.storage.Add(grant);
             return allowedByPolicy;
         }

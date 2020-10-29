@@ -1,8 +1,6 @@
-using System;
 using System.Collections.Generic;
 using System.Net.Http;
 using authorization_play.Middleware;
-using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -28,21 +26,12 @@ namespace authorization_play.TestApi
             services.AddHttpClient("Test").ConfigurePrimaryHttpMessageHandler(() => new HttpClientHandler
             {
                 ClientCertificateOptions = ClientCertificateOption.Manual,
-                
-                ServerCertificateCustomValidationCallback = (httpRequestMessage, cert, cetChain, policyErrors) =>
-                {
-                    return true;
-                }
+                ServerCertificateCustomValidationCallback = (httpRequestMessage, cert, cetChain, policyErrors) => true
             });
             services.AddAuthentication(options =>
                 {
                     options.DefaultAuthenticateScheme = "PemTicket";
                     //options.DefaultScheme = "PemTicket";
-                })
-                .AddOpenIdConnect(options =>
-                {
-                    options.MetadataAddress =
-                        "http://authorization-play.keycloak/auth/realms/moa/.well-known/openid-configuration";
                 })
                 .AddPermissionTicketAuthorization();
 
@@ -57,18 +46,6 @@ namespace authorization_play.TestApi
                     In = ParameterLocation.Header
                 };
                 c.AddSecurityDefinition("PemTicket", pemTicketScheme);
-                c.AddSecurityDefinition("oauth2", new OpenApiSecurityScheme
-                {
-                    Type = SecuritySchemeType.OAuth2,
-                    OpenIdConnectUrl = new Uri("http://localhost:8080/auth/realms/moa/.well-known/openid-configuration"),
-                    Flows = new OpenApiOAuthFlows()
-                    {
-                        Implicit = new OpenApiOAuthFlow()
-                        {
-                            AuthorizationUrl = new Uri("http://localhost:8080/auth/realms/moa/protocol/openid-connect/auth")
-                        }
-                    }
-                });
                 c.AddSecurityRequirement(new OpenApiSecurityRequirement()
                 {
                     {
@@ -83,19 +60,6 @@ namespace authorization_play.TestApi
                             Name = "X-Permission-Ticket",
                             In = ParameterLocation.Header
                         },
-                        new List<string>()
-                    },
-                    {
-                        new OpenApiSecurityScheme()
-                        {
-                            Reference = new OpenApiReference()
-                            {
-                                Type = ReferenceType.SecurityScheme,
-                                Id = "oauth2"
-                            },
-                            Scheme = "oauth2",
-                            Name = "OAuth"
-                        }, 
                         new List<string>()
                     }
                 });
