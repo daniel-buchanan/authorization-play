@@ -10,7 +10,7 @@ namespace authorization_play.Core.Permissions.Models
 {
     public class PermissionGrant
     {
-        [JsonProperty("id")]
+        [JsonProperty("id", NullValueHandling = NullValueHandling.Ignore)]
         public int? Id { get; set; }
 
         [JsonProperty("resource")]
@@ -24,14 +24,23 @@ namespace authorization_play.Core.Permissions.Models
         [JsonProperty("schema")]
         public DataSchema Schema { get; set; }
         
-        [JsonProperty("ident")]
+        [JsonProperty("principal")]
         public CRN Principal { get; set; }
+
+        [JsonProperty("grantor")]
+        public CRN Grantor { get; set; }
         
         [JsonProperty("action")]
         [JsonConverter(typeof(SingleOrArrayConverter<ResourceAction>))]
         public List<ResourceAction> Actions { get; set; }
 
-        public static PermissionGrant For(CRN principal) => new PermissionGrant() { Principal = principal};
+        public static PermissionGrant From(CRN grantor) => new PermissionGrant() { Grantor = grantor };
+
+        public PermissionGrant To(CRN principal)
+        {
+            Principal = principal;
+            return this;
+        }
 
         public PermissionGrant WithSchema(DataSchema schema)
         {
@@ -99,6 +108,7 @@ namespace authorization_play.Core.Permissions.Models
         public bool IsValid => Resource?.TrueForAll(r => r.IsValid) == true &&
                                Schema?.IsValid == true &&
                                Principal?.IsValid == true &&
+                               Grantor?.IsValid == true &&
                                Actions?.Count > 0;
     }
 }

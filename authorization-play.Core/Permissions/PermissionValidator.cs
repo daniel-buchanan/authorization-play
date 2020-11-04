@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using authorization_play.Core.DataProviders;
 using authorization_play.Core.Models;
 using authorization_play.Core.Permissions.Models;
 using authorization_play.Core.Resources;
@@ -17,14 +18,17 @@ namespace authorization_play.Core.Permissions
         private readonly IResourceValidator resourceValidator;
         private readonly IResourceFinder resourceFinder;
         private readonly IPermissionGrantFinder permissionGrantFinder;
+        private readonly IDataProviderPolicyApplicator policyApplicator;
 
         public PermissionValidator(IResourceValidator resourceValidator,
             IResourceFinder resourceFinder,
-            IPermissionGrantFinder permissionGrantFinder)
+            IPermissionGrantFinder permissionGrantFinder,
+            IDataProviderPolicyApplicator policyApplicator)
         {
             this.resourceValidator = resourceValidator;
             this.resourceFinder = resourceFinder;
             this.permissionGrantFinder = permissionGrantFinder;
+            this.policyApplicator = policyApplicator;
         }
 
         public PermissionValidationResponse Validate(PermissionValidationRequest request)
@@ -39,21 +43,30 @@ namespace authorization_play.Core.Permissions
             var permissions = this.permissionGrantFinder.Find(request.Principal, request.Schema);
             foreach (var pem in permissions)
             {
+                // apply policy at ticket issue time
+                if (!this.policyApplicator.IsGrantValid(pem)) continue;
+
                 var permissionedResources = this.resourceFinder.Find(pem.Resource);
                 var intersection = permissionedResources.Intersect(requestedResources);
-                var currentDeniedResources = requestedResources.Where(r => !intersection.Contains(r)).Select(r => r.Identifier).ToList();
+                var preValidationDeniedResources = requestedResources.Where(r => !intersection.Contains(r)).Select(r => r.Identifier).ToList();
                 foreach (var validResource in intersection)
                 {
                     Validator.TryValidate(
                         () => this.resourceValidator.Validate(validResource.Identifier, request.Action),
                         out var result);
 
-                    if(result.IsValid) allowedResources.Add(validResource.Identifier);
-                    else deniedResources.Add(validResource.Identifier);
+                    var resourceActionAllowed = pem.Actions.Contains(request.Action);
+                    if (!resourceActionAllowed || !result.IsValid)
+                    {
+                        deniedResources.Add(validResource.Identifier);
+                        continue;
+                    }
+
+                    allowedResources.Add(validResource.Identifier);
                 }
 
-                if(currentDeniedResources.Any())
-                    deniedResources.AddRange(currentDeniedResources);
+                if(preValidationDeniedResources.Any())
+                    deniedResources.AddRange(preValidationDeniedResources);
             }
 
             allowedResources = allowedResources.Distinct().ToList();

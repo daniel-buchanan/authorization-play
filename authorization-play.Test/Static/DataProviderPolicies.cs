@@ -5,7 +5,7 @@ namespace authorization_play.Test.Static
     public static class DataProviderPolicies
     {
         public static DataProviderPolicy Fonterra => DataProviderPolicy
-            .ForProvider(Test.Static.DataProviders.Fonterra.Identifier)
+            .ForProvider(DataProviders.Fonterra.Identifier)
             .WithSchema(Schemas.MilkPickup)
             .WithRule(DataProviderPolicyRule
                 .ForPrincipal(Identities.DanielB)
@@ -15,7 +15,7 @@ namespace authorization_play.Test.Static
                 .ExplicitAllow());
 
         public static DataProviderPolicy OpenCountry => DataProviderPolicy
-            .ForProvider(Test.Static.DataProviders.OpenCountry.Identifier)
+            .ForProvider(DataProviders.OpenCountry.Identifier)
             .WithSchema(Schemas.MilkPickup)
             .WithRule(DataProviderPolicyRule
                 .ForPrincipal(Identities.Admin)

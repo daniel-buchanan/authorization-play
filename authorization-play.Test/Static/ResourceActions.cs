@@ -9,6 +9,7 @@ namespace authorization_play.Test.Static
         {
             yield return Iam.Owner;
             yield return Iam.Delegated;
+            yield return Data.Read;
             yield return Anonymous.Aggregated;
             yield return Anonymous.IdentityRemoved;
             yield return Identified.Aggregated;
@@ -19,6 +20,11 @@ namespace authorization_play.Test.Static
         {
             public static ResourceAction Owner => ResourceAction.FromValue("iam:owner");
             public static ResourceAction Delegated => ResourceAction.FromValue("iam:delegated");
+        }
+
+        public class Data
+        {
+            public static ResourceAction Read => ResourceAction.FromValue("data:read");
         }
 
         public class Anonymous

@@ -31,14 +31,16 @@ namespace authorization_play.Core.Permissions
 
         public PermissionTicket Request(params PermissionRequest[] request)
         {
-            if(request == null || request.Length == 0) return PermissionTicket.Invalid();
+            if(request == null || request.Length == 0) 
+                return PermissionTicket.Invalid();
 
             var requestHash = string.Join(".", request.Select(r => r.GetHash()));
 
             var ticket = this.storage.Find(requestHash);
             var existingTicketExpired = ticket != null && ticket.IsExpired(DateTimeOffset.UtcNow);
 
-            if (!existingTicketExpired && ticket != null) return ticket;
+            if (!existingTicketExpired && ticket != null) 
+                return ticket;
             
             this.storage.Remove(requestHash);
 
@@ -69,7 +71,8 @@ namespace authorization_play.Core.Permissions
 
             var keys = found.Select(f => f.GetHash());
 
-            foreach (var k in keys) this.storage.Remove(k);
+            foreach (var k in keys) 
+                this.storage.Remove(k);
         }
 
         public void Revoke(string hash)
@@ -81,13 +84,15 @@ namespace authorization_play.Core.Permissions
 
         public void Revoke(PermissionTicket ticket)
         {
-            if(ticket == null) throw new ArgumentNullException(nameof(ticket), "Ticket cannot be NULL");
+            if(ticket == null) 
+                throw new ArgumentNullException(nameof(ticket), "Ticket cannot be NULL");
             this.storage.Remove(ticket.GetHash());
         }
 
         public bool Validate(string input, string secret = null)
         {
             if (string.IsNullOrWhiteSpace(input)) return false;
+
             PermissionTicket ticket;
             try
             {

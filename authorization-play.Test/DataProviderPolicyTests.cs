@@ -44,7 +44,8 @@ namespace authorization_play.Test
         {
             yield return new object[]
             {
-                PermissionGrant.For(Identities.Admin)
+                PermissionGrant.From(Identities.Platform)
+                    .To(Identities.Admin)
                     .ForResources(Resources.Farm.Identifier)
                     .WithActions(ResourceActions.Iam.Owner)
                     .ForSources(DataProviders.Fonterra.Identifier)
@@ -53,7 +54,8 @@ namespace authorization_play.Test
 
             yield return new object[]
             {
-                PermissionGrant.For(Identities.DanielB)
+                PermissionGrant.From(Identities.Platform)
+                    .To(Identities.DanielB)
                     .ForResources(Resources.Farm.Identifier)
                     .WithActions(ResourceActions.Iam.Owner)
                     .ForSources(DataProviders.OpenCountry.Identifier)
@@ -62,7 +64,8 @@ namespace authorization_play.Test
 
             yield return new object[]
             {
-                PermissionGrant.For(Identities.DanielB)
+                PermissionGrant.From(Identities.Platform)
+                    .To(Identities.DanielB)
                     .ForResources(Resources.Farm.Identifier)
                     .WithActions(ResourceActions.Iam.Owner)
                     .WithSchema(Schemas.MilkPickup)
@@ -70,7 +73,8 @@ namespace authorization_play.Test
 
             yield return new object[]
             {
-                PermissionGrant.For(Identities.Admin)
+                PermissionGrant.From(Identities.Platform)
+                    .To(Identities.Admin)
                     .ForResources(Resources.Farm.Identifier)
                     .WithActions(ResourceActions.Iam.Owner)
                     .WithSchema(Schemas.MilkPickup)
@@ -81,7 +85,8 @@ namespace authorization_play.Test
         {
             yield return new object[]
             {
-                PermissionGrant.For(Identities.DanielB)
+                PermissionGrant.From(Identities.Platform)
+                    .To(Identities.DanielB)
                     .ForResources(Resources.Farm.Identifier)
                     .WithActions(ResourceActions.Iam.Owner)
                     .ForSources(DataProviders.Fonterra.Identifier)
@@ -90,7 +95,8 @@ namespace authorization_play.Test
 
             yield return new object[]
             {
-                PermissionGrant.For(Identities.Admin)
+                PermissionGrant.From(Identities.Platform)
+                    .To(Identities.Admin)
                     .ForResources(Resources.Farm.Identifier)
                     .WithActions(ResourceActions.Iam.Owner)
                     .ForSources(DataProviders.OpenCountry.Identifier)

@@ -7,7 +7,7 @@ namespace authorization_play.Persistance.Models
     {
         public int PrincipalId { get; set; }
         public string CanonicalName { get; set; }
-        public List<PrincipalRelation> PrimaryRelations { get; set; }
-        public List<PrincipalRelation> SecondaryRelations { get; set; }
+        public List<PrincipalRelation> ChildRelations { get; set; }
+        public List<PrincipalRelation> ParentRelations { get; set; }
     }
 }

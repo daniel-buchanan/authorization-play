@@ -44,7 +44,7 @@ namespace authorization_play.Test
             var permissionFinder = new PermissionGrantFinder(storage);
 
             // Act
-            var result = permissionFinder.Find(Identities.Admin);
+            var result = permissionFinder.Find(Identities.Platform);
 
             // Assert
             result.Should().BeEmpty();

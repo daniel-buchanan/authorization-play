@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using authorization_play.Core.DataProviders;
 using authorization_play.Core.Models;
 using authorization_play.Core.Permissions;
 using authorization_play.Core.Permissions.Models;
@@ -24,7 +25,9 @@ namespace authorization_play.Test
             var resourceFinder = new ResourceFinder(resourceStorage);
             var resourceValidator = new ResourceValidator(resourceStorage);
             var permissionFinder = new PermissionGrantFinder(permissionStorage);
-            var validator = new PermissionValidator(resourceValidator, resourceFinder, permissionFinder);
+            var dataProviderStorage = new MockDataProviderStorage().Setup();
+            var policyApplicator = new DataProviderPolicyApplicator(dataProviderStorage);
+            var validator = new PermissionValidator(resourceValidator, resourceFinder, permissionFinder, policyApplicator);
             this.storage = new PermissionTicketStorage();
             this.manager = new PermissionTicketManager(validator, storage);
         }
@@ -68,7 +71,7 @@ namespace authorization_play.Test
             {
                 new PermissionRequest()
                 {
-                    Action = ResourceActions.Iam.Owner,
+                    Action = ResourceActions.Data.Read,
                     Principal = Identities.DanielB,
                     Schema = Schemas.MilkPickup,
                     Resource = CRN.FromValue("crn:farm/*:herd/88756")
@@ -79,7 +82,7 @@ namespace authorization_play.Test
             {
                 new PermissionRequest()
                 {
-                    Action = ResourceActions.Iam.Owner,
+                    Action = ResourceActions.Data.Read,
                     Principal = Identities.DanielB,
                     Schema = Schemas.MilkPickup,
                     Resource = CRN.FromValue("crn:farm/*:herd/88756:*")
@@ -90,7 +93,7 @@ namespace authorization_play.Test
             {
                 new PermissionRequest()
                 {
-                    Action = ResourceActions.Iam.Owner,
+                    Action = ResourceActions.Data.Read,
                     Principal = Identities.DanielB,
                     Schema = Schemas.MilkPickup,
                     Resource = CRN.FromValue("crn:farm/1234:herd/88756")
@@ -101,7 +104,7 @@ namespace authorization_play.Test
             {
                 new PermissionRequest()
                 {
-                    Action = ResourceActions.Iam.Owner,
+                    Action = ResourceActions.Data.Read,
                     Principal = Identities.DanielB,
                     Schema = Schemas.MilkPickup,
                     Resource = CRN.FromValue("crn:farm/1234:herd/88756:*")
@@ -138,7 +141,7 @@ namespace authorization_play.Test
                 new PermissionRequest()
                 {
                     Action = ResourceActions.Iam.Owner,
-                    Principal = Identities.Admin,
+                    Principal = Identities.DanielB,
                     Schema = Schemas.MilkPickup,
                     Resource = CRN.FromValue("crn:farm/*:herd/88756")
                 }

@@ -4,23 +4,23 @@ namespace authorization_play.Persistance.Models
 {
     public class PrincipalRelation
     {
-        public int PrimaryPrincipalId { get; set; }
-        public Principal Primary { get; set; }
-        public int SecondaryPrincipalId { get; set; }
-        public Principal Secondary { get; set; }
+        public int ParentPrincipalId { get; set; }
+        public Principal Parent { get; set; }
+        public int ChildPrincipalId { get; set; }
+        public Principal Child { get; set; }
 
         public static void OnModelCreating(ModelBuilder modelBuilder)
         {
             var entityBuilder = modelBuilder.Entity<PrincipalRelation>();
             entityBuilder.HasKey(x => new
             {
-                x.PrimaryPrincipalId,
-                x.SecondaryPrincipalId
+                x.ParentPrincipalId,
+                x.ChildPrincipalId
             });
-            entityBuilder.HasOne(x => x.Primary)
-                .WithMany(x => x.PrimaryRelations);
-            entityBuilder.HasOne(x => x.Secondary)
-                .WithMany(x => x.SecondaryRelations);
+            entityBuilder.HasOne(x => x.Parent)
+                .WithMany(x => x.ChildRelations);
+            entityBuilder.HasOne(x => x.Child)
+                .WithMany(x => x.ParentRelations);
         }
     }
 }

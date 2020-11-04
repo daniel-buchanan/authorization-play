@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using authorization_play.Persistance;
@@ -9,9 +10,10 @@ using authorization_play.Persistance;
 namespace authorization_play.Persistance.Migrations
 {
     [DbContext(typeof(AuthorizationPlayContext))]
-    partial class AuthorizationPlayContextModelSnapshot : ModelSnapshot
+    [Migration("20201104020323_UpdatedPrincipalRelationNames")]
+    partial class UpdatedPrincipalRelationNames
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
