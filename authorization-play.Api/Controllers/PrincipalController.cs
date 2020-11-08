@@ -1,6 +1,8 @@
 ﻿using System.Linq;
 using authorization_play.Core.Models;
 using authorization_play.Core.Permissions.Models;
+using authorization_play.Core.Principals;
+using authorization_play.Core.Principals.Models;
 using authorization_play.Persistance;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -13,47 +15,22 @@ namespace authorization_play.Api.Controllers
     public class PrincipalController : ControllerBase
     {
         private readonly AuthorizationPlayContext context;
+        private readonly IPrincipalStorage storage;
 
-        public PrincipalController(AuthorizationPlayContext context)
+        public PrincipalController(AuthorizationPlayContext context,
+            IPrincipalStorage storage)
         {
             this.context = context;
+            this.storage = storage;
         }
 
         [HttpGet]
         [Route("")]
-        public IActionResult Get()
-        {
-            var found = this.context.Principals
-                .Include(p => p.ChildRelations)
-                .ThenInclude(r => r.Child)
-                .ToList()
-                .Select(p => new Principal()
-                {
-                    Identifier = CRN.FromValue(p.CanonicalName),
-                    Children = p.ChildRelations.Select(r => CRN.FromValue(r.Child.CanonicalName)).ToList()
-                });
-            return Ok(found);
-        }
+        public IActionResult Get() => Ok(this.storage.All());
 
         [HttpGet]
         [Route("{id}")]
-        public IActionResult Get(int id)
-        {
-            var found = this.context.Principals
-                .Include(p => p.ChildRelations)
-                .ThenInclude(r => r.Child)
-                .FirstOrDefault(p => p.PrincipalId == id);
-
-            if (found == null) return NotFound();
-
-            var toReturn = new Principal()
-            {
-                Identifier = CRN.FromValue(found.CanonicalName),
-                Children = found.ChildRelations.Select(r => CRN.FromValue(r.Child.CanonicalName)).ToList()
-            };
-
-            return Ok(toReturn);
-        }
+        public IActionResult Get(int id) => Ok(this.storage.GetById(id));
 
         [HttpPost]
         [SwaggerResponse(200, "The grant was added successfully", typeof(PermissionGrant))]
@@ -62,25 +39,7 @@ namespace authorization_play.Api.Controllers
         {
             if (principal == null) return BadRequest();
 
-            var toAdd = new Persistance.Models.Principal()
-            {
-                CanonicalName = principal.Identifier
-            };
-
-            this.context.Add(toAdd);
-
-            foreach (var child in principal.Children)
-            {
-                var found = this.context.Principals.FirstOrDefault(p => p.CanonicalName == child.Value);
-                if (found == null) continue;
-                this.context.Add(new Persistance.Models.PrincipalRelation()
-                {
-                    Parent = toAdd,
-                    Child = found
-                });
-            }
-
-            this.context.SaveChanges();
+            this.storage.Add(principal);
 
             return Ok();
         }

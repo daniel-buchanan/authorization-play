@@ -21,7 +21,8 @@ namespace authorization_play.Test
             var resourceValidator = new ResourceValidator(resourceStorage);
             var permissionFinder = new PermissionGrantFinder(permissionStorage);
             var dataProviderStorage = new MockDataProviderStorage().Setup();
-            var policyApplicator = new DataProviderPolicyApplicator(dataProviderStorage);
+            var principalStorage = new MockPrincipalStorage().Setup();
+            var policyApplicator = new DataProviderPolicyApplicator(dataProviderStorage, principalStorage);
             return new PermissionValidator(resourceValidator, resourceFinder, permissionFinder, policyApplicator);
         }
 

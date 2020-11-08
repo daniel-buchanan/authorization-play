@@ -40,13 +40,13 @@ namespace authorization_play.Core.Permissions
             if (!Validator.TryValidate(() => ValidateResources(requestedResources, request), out var resourceValidationResult))
                 return PermissionValidationResponse.InvalidFromResourceValidation(request, resourceValidationResult);
 
-            var permissions = this.permissionGrantFinder.Find(request.Principal, request.Schema);
-            foreach (var pem in permissions)
+            var issuedGrants = this.permissionGrantFinder.Find(request.Principal, request.Schema);
+            foreach (var g in issuedGrants)
             {
                 // apply policy at ticket issue time
-                if (!this.policyApplicator.IsGrantValid(pem)) continue;
+                if (!this.policyApplicator.IsGrantValid(g)) continue;
 
-                var permissionedResources = this.resourceFinder.Find(pem.Resource);
+                var permissionedResources = this.resourceFinder.Find(g.Resource);
                 var intersection = permissionedResources.Intersect(requestedResources);
                 var preValidationDeniedResources = requestedResources.Where(r => !intersection.Contains(r)).Select(r => r.Identifier).ToList();
                 foreach (var validResource in intersection)
@@ -55,7 +55,7 @@ namespace authorization_play.Core.Permissions
                         () => this.resourceValidator.Validate(validResource.Identifier, request.Action),
                         out var result);
 
-                    var resourceActionAllowed = pem.Actions.Contains(request.Action);
+                    var resourceActionAllowed = g.Actions.Contains(request.Action);
                     if (!resourceActionAllowed || !result.IsValid)
                     {
                         deniedResources.Add(validResource.Identifier);

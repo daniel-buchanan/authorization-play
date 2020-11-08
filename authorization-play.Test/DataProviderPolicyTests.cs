@@ -15,7 +15,8 @@ namespace authorization_play.Test
         public DataProviderPolicyTests()
         {
             var storage = new MockDataProviderStorage().Setup();
-            this.applicator = new DataProviderPolicyApplicator(storage);
+            var principalStorage = new MockPrincipalStorage().Setup();
+            this.applicator = new DataProviderPolicyApplicator(storage, principalStorage);
         }
 
         [Theory]

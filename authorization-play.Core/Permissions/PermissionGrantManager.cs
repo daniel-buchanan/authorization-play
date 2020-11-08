@@ -2,6 +2,7 @@
 using authorization_play.Core.DataProviders;
 using authorization_play.Core.Models;
 using authorization_play.Core.Permissions.Models;
+using authorization_play.Core.Principals.Models;
 using authorization_play.Core.Resources;
 using authorization_play.Core.Resources.Models;
 
@@ -57,8 +58,9 @@ namespace authorization_play.Core.Permissions
         {
             if (grant.Grantor == Principal.Platform) return true;
 
-            var ownerAction = this.resources.AllActions().FirstOrDefault(ra => ra == "iam:owner");
-            var delegatedAction = this.resources.AllActions().FirstOrDefault(ra => ra == "iam:delegated");
+            var allActions = this.resources.AllActions().ToList();
+            var ownerAction = allActions.FirstOrDefault(ra => ra == "iam:owner");
+            var delegatedAction = allActions.FirstOrDefault(ra => ra == "iam:delegated");
 
             if (ownerAction == default(ResourceAction) &&
                 delegatedAction == default(ResourceAction))

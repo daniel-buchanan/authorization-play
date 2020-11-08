@@ -17,7 +17,8 @@ namespace authorization_play.Test
         public PermissionGrantManagerTests()
         {
             var dataProviderStorage = new MockDataProviderStorage().Setup();
-            var applicator = new DataProviderPolicyApplicator(dataProviderStorage);
+            var principalStorage = new MockPrincipalStorage().Setup();
+            var applicator = new DataProviderPolicyApplicator(dataProviderStorage, principalStorage);
             var permissionGrantStorage = new MockPermissionGrantStorage().Setup();
             var permissionGrantFinder = new PermissionGrantFinder(permissionGrantStorage);
             var resourceStorage = new MockResourceStorage().Setup();

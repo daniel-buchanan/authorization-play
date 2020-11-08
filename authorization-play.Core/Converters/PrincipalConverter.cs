@@ -1,5 +1,6 @@
 ﻿using System;
 using authorization_play.Core.Models;
+using authorization_play.Core.Principals.Models;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
