@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using authorization_play.Core.Converters;
 using authorization_play.Core.Models;
 using authorization_play.Core.Resources.Models;
@@ -15,7 +16,11 @@ namespace authorization_play.Core.Permissions.Models
         [JsonProperty("reason")]
         public string Reason { get; set; }
 
-        [JsonProperty("requester")]
+        [JsonProperty("rat")]
+        [JsonConverter(typeof(DateTimeToEpochConverter))]
+        public DateTimeOffset RequestedAt { get; set; }
+
+        [JsonProperty("req")]
         public CPN RequestingPrincipal { get; set; }
     }
 
