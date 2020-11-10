@@ -19,11 +19,13 @@ namespace authorization_play.Core.Permissions.Models
         {
             public const string Identity = "ident";
             public const string Expiry = "exp";
+            public const string IssuedAt = "iat";
             public const string Resources = "resource";
         }
 
         public PermissionTicket()
         {
+            IssuedAt = DateTimeOffset.UtcNow;
             Resources = new List<PermissionTicketResource>();
         }
 
@@ -33,6 +35,10 @@ namespace authorization_play.Core.Permissions.Models
         [JsonProperty(Claims.Expiry)]
         [JsonConverter(typeof(DateTimeToEpochConverter))]
         public DateTimeOffset Expiry { get; set; }
+
+        [JsonProperty(Claims.IssuedAt)]
+        [JsonConverter(typeof(DateTimeToEpochConverter))]
+        public DateTimeOffset IssuedAt { get; set; }
 
         [JsonProperty(Claims.Resources)]
         [JsonConverter(typeof(SingleOrArrayConverter<PermissionTicketResource>))]
