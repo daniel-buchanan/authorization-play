@@ -45,5 +45,23 @@ namespace authorization_play.Test.Mocks
         }
 
         public void Add(Principal principal) => this.storage.Add(principal);
+
+        public bool AddRelation(CRN parent, CRN child)
+        {
+            var found = this.storage.FirstOrDefault(p => p.Identifier == parent);
+            if (found == null) return false;
+            found.Children.Add(child);
+            return true;
+        }
+
+        public void Remove(CRN principal)
+        {
+            this.storage.RemoveAll(p => p.Identifier == principal);
+        }
+
+        public void Remove(int id)
+        {
+            this.storage.RemoveAll(p => p.Id == id);
+        }
     }
 }

@@ -19,14 +19,14 @@ namespace authorization_play.Api.Controllers
         }
 
         [HttpPost]
-        [Route("request")]
+        [Route("ticketRequest")]
         [SwaggerResponse(200, "A JWT Permissions Ticket", typeof(string))]
         [SwaggerResponse(400, "A ticket was not able to be issued.", typeof(string))]
-        public IActionResult RequestTicket(PermissionRequest[] request)
+        public IActionResult RequestTicket(PermissionTicketRequest[] request)
         {
             var ticket = this.manager.Request(request);
             if(!ticket.IsValid)
-                return BadRequest("Invalid Request");
+                return BadRequest("Invalid TicketRequest");
 
             return Content(ticket.ToJwt(Secret));
         }

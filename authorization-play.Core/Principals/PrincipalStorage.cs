@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Sockets;
 using authorization_play.Core.Models;
 using authorization_play.Core.Principals.Models;
 using authorization_play.Persistance;
@@ -15,6 +16,9 @@ namespace authorization_play.Core.Principals
         IEnumerable<Principal> Find(CRN principal);
         IEnumerable<Principal> FindParents(CRN principal);
         void Add(Principal principal);
+        bool AddRelation(CRN parent, CRN child);
+        void Remove(CRN principal);
+        void Remove(int id);
     }
 
     public class PrincipalStorage : IPrincipalStorage
@@ -87,18 +91,45 @@ namespace authorization_play.Core.Principals
 
             this.context.Add(toAdd);
 
-            foreach (var child in principal.Children)
-            {
-                var found = this.context.Principals.FirstOrDefault(p => p.CanonicalName == child.Value);
-                if (found == null) continue;
-                this.context.Add(new Persistance.Models.PrincipalRelation()
-                {
-                    Parent = toAdd,
-                    Child = found
-                });
-            }
+            foreach (var child in principal.Children) AddRelation(toAdd, child);
 
             this.context.SaveChanges();
+        }
+
+        public bool AddRelation(CRN parent, CRN child)
+        {
+            var found = this.context.Principals.FirstOrDefault(p => p.CanonicalName == parent.Value);
+            if (found == null) return false;
+            AddRelation(found, child);
+            this.context.SaveChanges();
+            return true;
+        }
+
+        public void Remove(CRN principal)
+        {
+            var found = this.context.Principals.FirstOrDefault(p => p.CanonicalName == principal.Value);
+            if (found == null) return;
+            this.context.Principals.Remove(found);
+            this.context.SaveChanges();
+        }
+
+        public void Remove(int id)
+        {
+            var found = this.context.Principals.FirstOrDefault(p => p.PrincipalId == id);
+            if (found == null) return;
+            this.context.Principals.Remove(found);
+            this.context.SaveChanges();
+        }
+
+        private void AddRelation(Persistance.Models.Principal parent, CRN child)
+        {
+            var found = this.context.Principals.FirstOrDefault(p => p.CanonicalName == child.Value);
+            if (found == null) return;
+            this.context.Add(new Persistance.Models.PrincipalRelation()
+            {
+                Parent = parent,
+                Child = found
+            });
         }
 
         private Principal ToModel(Persistance.Models.Principal entity)

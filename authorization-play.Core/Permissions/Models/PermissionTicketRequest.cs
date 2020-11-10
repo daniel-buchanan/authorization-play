@@ -5,7 +5,7 @@ using authorization_play.Core.Resources.Models;
 
 namespace authorization_play.Core.Permissions.Models
 {
-    public class PermissionRequest
+    public class PermissionTicketRequest
     {
         public CRN Resource { get; set; }
         public ResourceAction Action { get; set; }
@@ -15,12 +15,10 @@ namespace authorization_play.Core.Permissions.Models
         public string GetHash()
         {
             var json = Newtonsoft.Json.JsonConvert.SerializeObject(this);
-            using (var hash = new SHA512Managed())
-            {
-                var bytes = Encoding.UTF8.GetBytes(json);
-                var hashBytes = hash.ComputeHash(bytes);
-                return hashBytes.ToHexString();
-            }
+            using var hash = new SHA512Managed();
+            var bytes = Encoding.UTF8.GetBytes(json);
+            var hashBytes = hash.ComputeHash(bytes);
+            return hashBytes.ToHexString();
         }
     }
 
@@ -31,20 +29,9 @@ namespace authorization_play.Core.Permissions.Models
         public CRN Principal { get; set; }
         public DataSchema Schema { get; set; }
 
-        public string GetHash()
+        public static implicit operator PermissionTicketRequest(PermissionValidationRequest request)
         {
-            var json = Newtonsoft.Json.JsonConvert.SerializeObject(this);
-            using (var hash = new SHA512Managed())
-            {
-                var bytes = Encoding.UTF8.GetBytes(json);
-                var hashBytes = hash.ComputeHash(bytes);
-                return hashBytes.ToHexString();
-            }
-        }
-
-        public static implicit operator PermissionRequest(PermissionValidationRequest request)
-        {
-            return new PermissionRequest()
+            return new PermissionTicketRequest()
             {
                 Action = request.Action,
                 Schema = request.Schema,
@@ -53,14 +40,14 @@ namespace authorization_play.Core.Permissions.Models
             };
         }
 
-        public static implicit operator PermissionValidationRequest(PermissionRequest request)
+        public static implicit operator PermissionValidationRequest(PermissionTicketRequest ticketRequest)
         {
             return new PermissionValidationRequest()
             {
-                Action = request.Action,
-                Schema = request.Schema,
-                Principal = request.Principal,
-                Resource = request.Resource
+                Action = ticketRequest.Action,
+                Schema = ticketRequest.Schema,
+                Principal = ticketRequest.Principal,
+                Resource = ticketRequest.Resource
             };
         }
     }

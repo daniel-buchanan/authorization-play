@@ -13,7 +13,7 @@ namespace authorization_play.Core.Permissions.Models
             DeniedResources = new List<CRN>();
         }
 
-        public PermissionRequest Request { get; set; }
+        public PermissionTicketRequest TicketRequest { get; set; }
         public List<CRN> AllowedResources { get; set; }
         public List<CRN> DeniedResources { get; set; }
 
@@ -34,20 +34,20 @@ namespace authorization_play.Core.Permissions.Models
         public string Reason { get; set; }
 
         public static PermissionValidationResponse InvalidFromResourceValidation(
-            PermissionRequest request,
+            PermissionTicketRequest ticketRequest,
             ValidationResult<CRN, ResourceAction, CRN> result) =>
             new PermissionValidationResponse()
             {
-                Request = request,
+                TicketRequest = ticketRequest,
                 Reason = result.Reason
             };
 
         public static PermissionValidationResponse From(
-            PermissionRequest request,
+            PermissionTicketRequest ticketRequest,
             IEnumerable<CRN> allowed = null,
             IEnumerable<CRN> denied = null) =>  new PermissionValidationResponse()
         {
-            Request = request,
+            TicketRequest = ticketRequest,
             AllowedResources = allowed?.ToList() ?? new List<CRN>(),
             DeniedResources = denied?.ToList() ?? new List<CRN>()
         };

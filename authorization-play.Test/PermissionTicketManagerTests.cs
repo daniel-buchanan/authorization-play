@@ -35,10 +35,10 @@ namespace authorization_play.Test
 
         [Theory]
         [MemberData(nameof(ValidPermissions))]
-        public void ValidTicketIssued(PermissionRequest request)
+        public void ValidTicketIssued(PermissionTicketRequest ticketRequest)
         {
             // Act
-            var ticket = this.manager.Request(request);
+            var ticket = this.manager.Request(ticketRequest);
 
             // Assert
             ticket.IsValid.Should().BeTrue();
@@ -46,10 +46,10 @@ namespace authorization_play.Test
 
         [Theory]
         [MemberData(nameof(ValidPermissions))]
-        public void ValidTicketLifetime(PermissionRequest request)
+        public void ValidTicketLifetime(PermissionTicketRequest ticketRequest)
         {
             // Act
-            var ticket = this.manager.Request(request);
+            var ticket = this.manager.Request(ticketRequest);
 
             // Assert
             ticket.Expiry.Should().BeAfter(DateTimeOffset.UtcNow.AddMinutes(29));
@@ -57,20 +57,20 @@ namespace authorization_play.Test
 
         [Theory]
         [MemberData(nameof(ValidPermissions))]
-        public void TicketHasCorrectIdentity(PermissionRequest request)
+        public void TicketHasCorrectIdentity(PermissionTicketRequest ticketRequest)
         {
             // Act
-            var ticket = this.manager.Request(request);
+            var ticket = this.manager.Request(ticketRequest);
 
             // Assert
-            ticket.Principal.Should().Be(request.Principal);
+            ticket.Principal.Should().Be(ticketRequest.Principal);
         }
 
         public static IEnumerable<object[]> ValidPermissions()
         {
             yield return new object[]
             {
-                new PermissionRequest()
+                new PermissionTicketRequest()
                 {
                     Action = ResourceActions.Data.Read,
                     Principal = Identities.DanielB,
@@ -81,7 +81,7 @@ namespace authorization_play.Test
 
             yield return new object[]
             {
-                new PermissionRequest()
+                new PermissionTicketRequest()
                 {
                     Action = ResourceActions.Data.Read,
                     Principal = Identities.DanielB,
@@ -92,7 +92,7 @@ namespace authorization_play.Test
 
             yield return new object[]
             {
-                new PermissionRequest()
+                new PermissionTicketRequest()
                 {
                     Action = ResourceActions.Data.Read,
                     Principal = Identities.DanielB,
@@ -103,7 +103,7 @@ namespace authorization_play.Test
 
             yield return new object[]
             {
-                new PermissionRequest()
+                new PermissionTicketRequest()
                 {
                     Action = ResourceActions.Data.Read,
                     Principal = Identities.DanielB,
@@ -115,10 +115,10 @@ namespace authorization_play.Test
 
         [Theory]
         [MemberData(nameof(InvalidPermissions))]
-        public void InvalidTickets(PermissionRequest request)
+        public void InvalidTickets(PermissionTicketRequest ticketRequest)
         {
             // Act
-            var result = this.manager.Request(request);
+            var result = this.manager.Request(ticketRequest);
 
             // Assert
             result.IsValid.Should().BeFalse();
@@ -128,7 +128,7 @@ namespace authorization_play.Test
         {
             yield return new object[]
             {
-                new PermissionRequest()
+                new PermissionTicketRequest()
                 {
                     Action = ResourceActions.Iam.Owner,
                     Principal = Identities.DanielB,
@@ -139,7 +139,7 @@ namespace authorization_play.Test
 
             yield return new object[]
             {
-                new PermissionRequest()
+                new PermissionTicketRequest()
                 {
                     Action = ResourceActions.Iam.Owner,
                     Principal = Identities.DanielB,
@@ -150,7 +150,7 @@ namespace authorization_play.Test
 
             yield return new object[]
             {
-                new PermissionRequest()
+                new PermissionTicketRequest()
                 {
                     Action = ResourceActions.Iam.Delegated,
                     Principal = Identities.DanielB,
@@ -161,7 +161,7 @@ namespace authorization_play.Test
 
             yield return new object[]
             {
-                new PermissionRequest()
+                new PermissionTicketRequest()
                 {
                     Action = ResourceActions.Iam.Owner,
                     Principal = Identities.DanielB,
@@ -294,7 +294,7 @@ namespace authorization_play.Test
         {
             // Arrange
             var resourceMask = CRN.FromParts("farm/*", "herd/*");
-            var ticket = this.manager.Request(new PermissionRequest()
+            var ticket = this.manager.Request(new PermissionTicketRequest()
             {
                 Schema = Schemas.MilkPickup,
                 Action = ResourceActions.Iam.Owner,

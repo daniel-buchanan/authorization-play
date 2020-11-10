@@ -8,7 +8,7 @@ namespace authorization_play.Core.Permissions
 {
     public interface IPermissionTicketManager
     {
-        PermissionTicket Request(params PermissionRequest[] request);
+        PermissionTicket Request(params PermissionTicketRequest[] request);
         void Revoke(CRN resource, CRN principal, DataSchema schema = null);
         void Revoke(string hash);
         void Revoke(PermissionTicket ticket);
@@ -29,7 +29,7 @@ namespace authorization_play.Core.Permissions
             this.storage = storage;
         }
 
-        public PermissionTicket Request(params PermissionRequest[] request)
+        public PermissionTicket Request(params PermissionTicketRequest[] request)
         {
             if(request == null || request.Length == 0) 
                 return PermissionTicket.Invalid();

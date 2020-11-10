@@ -15,7 +15,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "authorization-play.Middlewa
 EndProject
 Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{84887EE6-E6FB-491B-92AC-57D14B11BC72}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "authorization-play.Persistance", "authorization-play.Persistance\authorization-play.Persistance.csproj", "{41F4487A-B0B7-42DE-B201-1911D6B21B27}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "authorization-play.Persistance", "authorization-play.Persistance\authorization-play.Persistance.csproj", "{41F4487A-B0B7-42DE-B201-1911D6B21B27}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

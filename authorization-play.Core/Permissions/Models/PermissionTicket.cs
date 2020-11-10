@@ -53,7 +53,7 @@ namespace authorization_play.Core.Permissions.Models
         {
             var resources = new List<PermissionTicketResource>();
 
-            var identities = validations.Select(v => v.Request.Principal).Distinct().ToList();
+            var identities = validations.Select(v => v.TicketRequest.Principal).Distinct().ToList();
             if (identities.Count() > 1) throw new ArgumentException("All validations *must* be for the same Principal");
 
             var principal = identities.First();
@@ -65,17 +65,17 @@ namespace authorization_play.Core.Permissions.Models
                 foreach (var r in v.AllowedResources)
                 {
                     var existing = resources.FirstOrDefault(e => e.Identifier == r &&
-                                                                 e.Schema == v.Request.Schema);
+                                                                 e.Schema == v.TicketRequest.Schema);
 
                     if (existing == null)
                     {
-                        existing = PermissionTicketResource.ForResource(r).ForSchema(v.Request.Schema).WithActions(v.Request.Action);
+                        existing = PermissionTicketResource.ForResource(r).ForSchema(v.TicketRequest.Schema).WithActions(v.TicketRequest.Action);
                         resources.Add(existing);
                     }
                     else
                     {
-                        if (existing.Actions.Contains(v.Request.Action)) continue;
-                        existing.WithActions(v.Request.Action);
+                        if (existing.Actions.Contains(v.TicketRequest.Action)) continue;
+                        existing.WithActions(v.TicketRequest.Action);
                     }
                 }
             }

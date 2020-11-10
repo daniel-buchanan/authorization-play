@@ -44,7 +44,7 @@ namespace authorization_play.Test
         {
             yield return new object[]
             {
-                new PermissionRequest()
+                new PermissionTicketRequest()
                 {
                     Action = ResourceActions.Data.Read,
                     Principal = Identities.DanielB,
@@ -55,7 +55,7 @@ namespace authorization_play.Test
 
             //yield return new object[]
             //{
-            //    new PermissionRequest()
+            //    new PermissionTicketRequest()
             //    {
             //        Action = ResourceActions.Data.Read,
             //        Principal = Identities.DanielB,
@@ -66,7 +66,7 @@ namespace authorization_play.Test
 
             yield return new object[]
             {
-                new PermissionRequest()
+                new PermissionTicketRequest()
                 {
                     Action = ResourceActions.Data.Read,
                     Principal = Identities.DanielB,
@@ -77,7 +77,7 @@ namespace authorization_play.Test
 
             //yield return new object[]
             //{
-            //    new PermissionRequest()
+            //    new PermissionTicketRequest()
             //    {
             //        Action = ResourceActions.Data.Read,
             //        Principal = Identities.DanielB,
@@ -105,7 +105,7 @@ namespace authorization_play.Test
         {
             yield return new object[]
             {
-                new PermissionRequest()
+                new PermissionTicketRequest()
                 {
                     Action = ResourceActions.Identified.Individual,
                     Principal = Identities.DanielB,
@@ -116,7 +116,7 @@ namespace authorization_play.Test
 
             yield return new object[]
             {
-                new PermissionRequest()
+                new PermissionTicketRequest()
                 {
                     Action = ResourceActions.Iam.Owner,
                     Principal = Identities.DanielB,
@@ -127,7 +127,7 @@ namespace authorization_play.Test
 
             yield return new object[]
             {
-                new PermissionRequest()
+                new PermissionTicketRequest()
                 {
                     Action = ResourceActions.Iam.Delegated,
                     Principal = Identities.Admin,
@@ -138,7 +138,7 @@ namespace authorization_play.Test
 
             yield return new object[]
             {
-                new PermissionRequest()
+                new PermissionTicketRequest()
                 {
                     Action = ResourceActions.Iam.Delegated,
                     Principal = Identities.DanielB,
@@ -149,7 +149,7 @@ namespace authorization_play.Test
 
             yield return new object[]
             {
-                new PermissionRequest()
+                new PermissionTicketRequest()
                 {
                     Action = ResourceActions.Iam.Owner,
                     Principal = Identities.DanielB,
@@ -177,7 +177,7 @@ namespace authorization_play.Test
         {
             yield return new object[]
             {
-                new PermissionRequest()
+                new PermissionTicketRequest()
                 {
                     Action = ResourceActions.Data.Read,
                     Principal = Identities.DanielB,
@@ -188,7 +188,7 @@ namespace authorization_play.Test
 
             yield return new object[]
             {
-                new PermissionRequest()
+                new PermissionTicketRequest()
                 {
                     Action = ResourceActions.Data.Read,
                     Principal = Identities.DanielB,
@@ -199,7 +199,7 @@ namespace authorization_play.Test
 
             yield return new object[]
             {
-                new PermissionRequest()
+                new PermissionTicketRequest()
                 {
                     Action = ResourceActions.Data.Read,
                     Principal = Identities.DanielB,

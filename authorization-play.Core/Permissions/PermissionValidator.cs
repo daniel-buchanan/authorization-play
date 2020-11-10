@@ -46,8 +46,8 @@ namespace authorization_play.Core.Permissions
                 // apply policy at ticket issue time
                 if (!this.policyApplicator.IsGrantValid(g)) continue;
 
-                var permissionedResources = this.resourceFinder.Find(g.Resource);
-                var intersection = permissionedResources.Intersect(requestedResources);
+                var grantedResources = this.resourceFinder.Find(g.Resource);
+                var intersection = grantedResources.Intersect(requestedResources);
                 var preValidationDeniedResources = requestedResources.Where(r => !intersection.Contains(r)).Select(r => r.Identifier).ToList();
                 foreach (var validResource in intersection)
                 {
@@ -74,21 +74,21 @@ namespace authorization_play.Core.Permissions
             return PermissionValidationResponse.From(request, allowedResources, deniedResources);
         }
 
-        private ValidationResult<CRN, ResourceAction, CRN> ValidateResources(IEnumerable<Resource> resources, PermissionRequest request)
+        private ValidationResult<CRN, ResourceAction, CRN> ValidateResources(IEnumerable<Resource> resources, PermissionTicketRequest ticketRequest)
         {
             foreach (var r in resources)
             {
                 if (!Validator.TryValidate(() => this.resourceValidator.Validate(r.Identifier), out var resultResource))
-                    return ValidationResult<CRN, ResourceAction, CRN>.Invalid(r.Identifier, request.Action, request.Principal, resultResource.Reason);
+                    return ValidationResult<CRN, ResourceAction, CRN>.Invalid(r.Identifier, ticketRequest.Action, ticketRequest.Principal, resultResource.Reason);
 
-                if (!Validator.TryValidate(() => this.resourceValidator.ValidateAction(request.Action), out var resultAction))
-                    return ValidationResult<CRN, ResourceAction, CRN>.Invalid(request.Resource, request.Action, request.Principal, resultAction.Reason);
+                if (!Validator.TryValidate(() => this.resourceValidator.ValidateAction(ticketRequest.Action), out var resultAction))
+                    return ValidationResult<CRN, ResourceAction, CRN>.Invalid(ticketRequest.Resource, ticketRequest.Action, ticketRequest.Principal, resultAction.Reason);
 
-                if (!Validator.TryValidate(() => this.resourceValidator.Validate(r.Identifier, request.Action), out var resultActionOnResource))
-                    return ValidationResult<CRN, ResourceAction, CRN>.Invalid(request.Resource, request.Action, request.Principal, resultActionOnResource.Reason);
+                if (!Validator.TryValidate(() => this.resourceValidator.Validate(r.Identifier, ticketRequest.Action), out var resultActionOnResource))
+                    return ValidationResult<CRN, ResourceAction, CRN>.Invalid(ticketRequest.Resource, ticketRequest.Action, ticketRequest.Principal, resultActionOnResource.Reason);
             }
 
-            return ValidationResult<CRN, ResourceAction, CRN>.Valid(request.Resource, request.Action, request.Principal);
+            return ValidationResult<CRN, ResourceAction, CRN>.Valid(ticketRequest.Resource, ticketRequest.Action, ticketRequest.Principal);
         }
     }
 }
