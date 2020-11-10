@@ -34,7 +34,7 @@ namespace authorization_play.Api.Controllers
             if (schema == null) results = this.grantFinder.Find(principalRn);
             else
             {
-                var schemaRn = DataSchema.FromValue(HttpUtility.UrlDecode(schema));
+                var schemaRn = CSN.FromValue(HttpUtility.UrlDecode(schema));
                 results = this.grantFinder.Find(principalRn, schemaRn);
             }
 

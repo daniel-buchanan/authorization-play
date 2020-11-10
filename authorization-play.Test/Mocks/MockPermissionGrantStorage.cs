@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using authorization_play.Core.Models;
 using authorization_play.Core.Permissions;
 using authorization_play.Core.Permissions.Models;
@@ -26,7 +24,7 @@ namespace authorization_play.Test.Mocks
         public IEnumerable<PermissionGrant> GetByPrincipal(CRN principal) =>
             this.grants.Where(g => g.Principal == principal);
 
-        public IEnumerable<PermissionGrant> GetByPrincipalAndSchema(CRN principal, DataSchema schema) =>
+        public IEnumerable<PermissionGrant> GetByPrincipalAndSchema(CRN principal, CSN schema) =>
             this.grants.Where(g => g.Principal == principal && g.Schema == schema);
     }
 }

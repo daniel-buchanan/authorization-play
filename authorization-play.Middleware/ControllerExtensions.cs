@@ -14,7 +14,7 @@ namespace authorization_play.Middleware
             this T controller, 
             CRN resource, 
             ResourceAction action, 
-            DataSchema schema)
+            CSN schema)
         where T: ControllerBase
         {
             var principal = controller.User;

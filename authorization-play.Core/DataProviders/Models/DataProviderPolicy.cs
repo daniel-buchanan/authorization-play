@@ -9,7 +9,7 @@ namespace authorization_play.Core.DataProviders.Models
     {
         public CRN Provider { get; set; }
 
-        public DataSchema Schema { get; set; }
+        public CSN Schema { get; set; }
 
         [JsonConverter(typeof(SingleOrArrayConverter<DataProviderPolicyRule>))]
         public List<DataProviderPolicyRule> Rule { get; set; }
@@ -19,7 +19,7 @@ namespace authorization_play.Core.DataProviders.Models
             Provider = provider
         };
 
-        public DataProviderPolicy WithSchema(DataSchema schema)
+        public DataProviderPolicy WithSchema(CSN schema)
         {
             Schema = schema;
             return this;

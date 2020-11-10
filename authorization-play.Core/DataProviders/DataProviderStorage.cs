@@ -13,10 +13,10 @@ namespace authorization_play.Core.DataProviders
         void AddSource(DataSource source);
         void AddPolicy(DataProviderPolicy policy);
         void Remove(CRN identifier);
-        void RemovePolicy(CRN identifier, DataSchema schema);
+        void RemovePolicy(CRN identifier, CSN schema);
         IEnumerable<DataProvider> All();
         IEnumerable<DataProviderPolicy> GetPolicies(CRN identifier);
-        IEnumerable<DataProviderPolicy> GetPoliciesForSchema(DataSchema schema);
+        IEnumerable<DataProviderPolicy> GetPoliciesForSchema(CSN schema);
     }
 
     public class DataProviderStorage : IDataProviderStorage
@@ -95,7 +95,7 @@ namespace authorization_play.Core.DataProviders
             this.context.SaveChanges();
         }
 
-        public void RemovePolicy(CRN identifier, DataSchema schema)
+        public void RemovePolicy(CRN identifier, CSN schema)
         {
             var provider = this.context.DataProviders.FirstOrDefault(p => p.CanonicalName == identifier.ToString());
             var foundSchema = this.context.Schemas.FirstOrDefault(s => s.CanonicalName == schema.ToString());
@@ -132,7 +132,7 @@ namespace authorization_play.Core.DataProviders
                 .Select(p => new DataProviderPolicy()
                 {
                     Provider = CRN.FromValue(p.Provider.CanonicalName),
-                    Schema = DataSchema.FromValue(p.Schema.CanonicalName),
+                    Schema = CSN.FromValue(p.Schema.CanonicalName),
                     Rule = p.PolicyItems.Select(i => new DataProviderPolicyRule()
                     {
                         Principal = CRN.FromValue(i.Principal.CanonicalName),
@@ -142,7 +142,7 @@ namespace authorization_play.Core.DataProviders
                 });
         }
 
-        public IEnumerable<DataProviderPolicy> GetPoliciesForSchema(DataSchema schema)
+        public IEnumerable<DataProviderPolicy> GetPoliciesForSchema(CSN schema)
         {
             return this.context.DataProviderPolicies
                 .Include(p => p.Provider)
@@ -154,7 +154,7 @@ namespace authorization_play.Core.DataProviders
                 .Select(p => new DataProviderPolicy()
                 {
                     Provider = CRN.FromValue(p.Provider.CanonicalName),
-                    Schema = DataSchema.FromValue(p.Schema.CanonicalName),
+                    Schema = CSN.FromValue(p.Schema.CanonicalName),
                     Rule = p.PolicyItems.Select(i => new DataProviderPolicyRule()
                     {
                         Principal = CRN.FromValue(i.Principal.CanonicalName),

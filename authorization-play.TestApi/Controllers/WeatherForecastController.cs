@@ -36,7 +36,7 @@ namespace authorization_play.TestApi.Controllers
             // somehow determine what the resource, action and schema are
             var resource = CRN.FromValue("crn:farm/1");
             var action = ResourceAction.FromValue("iam:owner");
-            var schema = DataSchema.FromValue("ag-data:farm");
+            var schema = CSN.FromValue("csn:ag-data:farm");
 
             // validate permissions
             var permissionsValid = this.ValidatePermissions(resource, action, schema);

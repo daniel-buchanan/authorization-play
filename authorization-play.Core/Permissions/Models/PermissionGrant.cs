@@ -22,7 +22,7 @@ namespace authorization_play.Core.Permissions.Models
         public List<CRN> Tag { get; set; }
         
         [JsonProperty("schema")]
-        public DataSchema Schema { get; set; }
+        public CSN Schema { get; set; }
         
         [JsonProperty("principal")]
         public CRN Principal { get; set; }
@@ -42,7 +42,7 @@ namespace authorization_play.Core.Permissions.Models
             return this;
         }
 
-        public PermissionGrant WithSchema(DataSchema schema)
+        public PermissionGrant WithSchema(CSN schema)
         {
             Schema = schema;
             return this;

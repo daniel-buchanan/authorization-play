@@ -21,7 +21,7 @@ namespace authorization_play.Api.Controllers
         [HttpGet]
         public IActionResult Get()
         {
-            var found = this.context.Schemas.ToList().Select(s => DataSchema.FromValue(s.CanonicalName));
+            var found = this.context.Schemas.ToList().Select(s => CSN.FromValue(s.CanonicalName));
             return Ok(found);
         }
 

@@ -18,7 +18,7 @@ namespace authorization_play.Core.Permissions.Models
         public CRN Identifier { get; set; }
 
         [JsonProperty("schema")]
-        public DataSchema Schema { get; set; }
+        public CSN Schema { get; set; }
 
         [JsonProperty("action")]
         [JsonConverter(typeof(SingleOrArrayConverter<ResourceAction>))]
@@ -34,7 +34,7 @@ namespace authorization_play.Core.Permissions.Models
             Identifier = resource
         };
 
-        public PermissionTicketResource ForSchema(DataSchema schema)
+        public PermissionTicketResource ForSchema(CSN schema)
         {
             Schema = schema;
             return this;

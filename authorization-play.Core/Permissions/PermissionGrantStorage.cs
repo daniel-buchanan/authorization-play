@@ -15,7 +15,7 @@ namespace authorization_play.Core.Permissions
         PermissionGrant GetById(int id);
         void Remove(PermissionGrant grant);
         IEnumerable<PermissionGrant> GetByPrincipal(CRN principal);
-        IEnumerable<PermissionGrant> GetByPrincipalAndSchema(CRN principal, DataSchema schema);
+        IEnumerable<PermissionGrant> GetByPrincipalAndSchema(CRN principal, CSN schema);
     }
 
     public class PermissionGrantStorage : IPermissionGrantStorage
@@ -78,7 +78,7 @@ namespace authorization_play.Core.Permissions
 
         public IEnumerable<PermissionGrant> GetByPrincipal(CRN principal) => GetByPrincipalAndSchema(principal, null);
 
-        public IEnumerable<PermissionGrant> GetByPrincipalAndSchema(CRN principal, DataSchema schema)
+        public IEnumerable<PermissionGrant> GetByPrincipalAndSchema(CRN principal, CSN schema)
         {
             var principalStr = principal?.ToString();
             var schemaStr = schema?.ToString();
@@ -101,7 +101,7 @@ namespace authorization_play.Core.Permissions
             {
                 Id = entity.PermissionGrantId,
                 Principal = CRN.FromValue(entity.Principal.CanonicalName),
-                Schema = DataSchema.FromValue(entity.Schema.CanonicalName),
+                Schema = CSN.FromValue(entity.Schema.CanonicalName),
                 Actions = entity.Actions.Select(a => ResourceAction.FromValue(a.Action.CanonicalName)).ToList(),
                 Resource = entity.Resources.Select(r => CRN.FromValue(r.Resource.CanonicalName)).ToList()
             };

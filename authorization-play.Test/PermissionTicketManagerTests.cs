@@ -210,7 +210,7 @@ namespace authorization_play.Test
                 ""resource"": [
                     {
                         ""resource"": ""crn:farm/1234"",
-                        ""schema"": ""ag-data:farm:milk-pickup"",
+                        ""schema"": ""csn:ag-data:farm:milk-pickup"",
                         ""action"": [
                             ""iam:owner""
                         ]
@@ -238,7 +238,7 @@ namespace authorization_play.Test
         {
             yield return new object[]
             {
-                "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJpZGVudCI6ImNybjp1c2VyLzQyIiwiZXhwIjo2MjEzNTU5Njc0MCwicmVzb3VyY2UiOlt7InJlc291cmNlIjoiY3JuOmZhcm0vMTIzNCIsInNjaGVtYSI6ImFnLWRhdGE6aGVyZDptaWxrLXBpY2t1cCIsImFjdGlvbiI6WyJpYW06b3duZXIiXX1dfQ.qcmDZhOU0gn0toA5woOZDlilcls6DFU8jqp_XkAspZXSrzp3KijCA6bKHSwCkfLZJK-f_JErnGgRSunaZ1tt6g",
+                "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJpZGVudCI6ImNybjp1c2VyLzQyIiwiZXhwIjo2MjEzNTU5Njc0MCwicmVzb3VyY2UiOlt7InJlc291cmNlIjoiY3JuOmZhcm0vMTIzNCIsInNjaGVtYSI6ImNzbjphZy1kYXRhOmhlcmQ6bWlsay1waWNrdXAiLCJhY3Rpb24iOlsiaWFtOm93bmVyIl19XX0.LdjQG7fE75oOghEJUwVZ8uSfMdYEvb9B6HIIBvs3MM3cmCpYX5Aysf8MOChd9JV3UtRZi9GeChOEjFNv3eA6-w",
                 true
             };
 
