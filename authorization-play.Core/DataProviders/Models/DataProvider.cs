@@ -5,7 +5,7 @@ namespace authorization_play.Core.DataProviders.Models
     public class DataProvider
     {
         public CRN Identifier { get; set; }
-        public CRN Principal { get; set; }
+        public CPN Principal { get; set; }
         public string Name { get; set; }
 
         public static DataProvider FromIdentifier(CRN identifier) => new DataProvider()
@@ -13,7 +13,7 @@ namespace authorization_play.Core.DataProviders.Models
             Identifier = identifier
         };
 
-        public DataProvider ForPrincipal(CRN principal)
+        public DataProvider ForPrincipal(CPN principal)
         {
             Principal = principal;
             return this;

@@ -30,7 +30,7 @@ namespace authorization_play.Api.Controllers
         public IActionResult Get([FromRoute] string principal, [FromQuery] string schema = null)
         {
             IEnumerable<PermissionGrant> results;
-            var principalRn = CRN.FromValue(HttpUtility.UrlDecode(principal));
+            var principalRn = CPN.FromValue(HttpUtility.UrlDecode(principal));
             if (schema == null) results = this.grantFinder.Find(principalRn);
             else
             {

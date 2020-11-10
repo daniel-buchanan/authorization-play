@@ -114,7 +114,7 @@ namespace authorization_play.Core.DataProviders
         {
             return this.context.DataProviders.Include(p => p.Principal).ToList().Select(p => new DataProvider()
             {
-                Principal = CRN.FromValue(p.Principal.CanonicalName),
+                Principal = CPN.FromValue(p.Principal.CanonicalName),
                 Identifier = CRN.FromValue(p.CanonicalName),
                 Name = p.Name
             });
@@ -135,7 +135,7 @@ namespace authorization_play.Core.DataProviders
                     Schema = CSN.FromValue(p.Schema.CanonicalName),
                     Rule = p.PolicyItems.Select(i => new DataProviderPolicyRule()
                     {
-                        Principal = CRN.FromValue(i.Principal.CanonicalName),
+                        Principal = CPN.FromValue(i.Principal.CanonicalName),
                         Allow = i.Allow,
                         Deny = i.Deny
                     }).ToList()
@@ -157,7 +157,7 @@ namespace authorization_play.Core.DataProviders
                     Schema = CSN.FromValue(p.Schema.CanonicalName),
                     Rule = p.PolicyItems.Select(i => new DataProviderPolicyRule()
                     {
-                        Principal = CRN.FromValue(i.Principal.CanonicalName),
+                        Principal = CPN.FromValue(i.Principal.CanonicalName),
                         Allow = i.Allow,
                         Deny = i.Deny
                     }).ToList()

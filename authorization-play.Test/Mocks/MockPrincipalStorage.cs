@@ -19,7 +19,7 @@ namespace authorization_play.Test.Mocks
 
         public Principal GetById(int id) => this.storage.FirstOrDefault(p => p.Id == id);
 
-        public IEnumerable<Principal> Find(CRN principal)
+        public IEnumerable<Principal> Find(CPN principal)
         {
             if (principal.IncludesWildcard) 
                 return this.storage.Where(p => principal.IsWildcardMatch(p.Identifier));
@@ -27,7 +27,7 @@ namespace authorization_play.Test.Mocks
             return this.storage.Where(p => p.Identifier == principal);
         }
 
-        public IEnumerable<Principal> FindParents(CRN principal)
+        public IEnumerable<Principal> FindParents(CPN principal)
         {
             var parents = new List<Principal>();
             Principal found = this.storage.FirstOrDefault(p => p.Identifier == principal);
@@ -46,7 +46,7 @@ namespace authorization_play.Test.Mocks
 
         public void Add(Principal principal) => this.storage.Add(principal);
 
-        public bool AddRelation(CRN parent, CRN child)
+        public bool AddRelation(CPN parent, CPN child)
         {
             var found = this.storage.FirstOrDefault(p => p.Identifier == parent);
             if (found == null) return false;
@@ -54,7 +54,7 @@ namespace authorization_play.Test.Mocks
             return true;
         }
 
-        public void Remove(CRN principal)
+        public void Remove(CPN principal)
         {
             this.storage.RemoveAll(p => p.Identifier == principal);
         }

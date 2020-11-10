@@ -30,7 +30,7 @@ namespace authorization_play.Core.Permissions.Models
         }
 
         [JsonProperty(Claims.Identity)]
-        public CRN Principal { get; set; }
+        public CPN Principal { get; set; }
 
         [JsonProperty(Claims.Expiry)]
         [JsonConverter(typeof(DateTimeToEpochConverter))]
@@ -95,7 +95,7 @@ namespace authorization_play.Core.Permissions.Models
             return this;
         }
 
-        public PermissionTicket ForPrincipal(CRN identity)
+        public PermissionTicket ForPrincipal(CPN identity)
         {
             Principal = identity;
             return this;

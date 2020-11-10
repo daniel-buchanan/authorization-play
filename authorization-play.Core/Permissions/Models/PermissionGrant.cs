@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using authorization_play.Core.Converters;
 using authorization_play.Core.Models;
@@ -25,18 +24,18 @@ namespace authorization_play.Core.Permissions.Models
         public CSN Schema { get; set; }
         
         [JsonProperty("principal")]
-        public CRN Principal { get; set; }
+        public CPN Principal { get; set; }
 
         [JsonProperty("grantor")]
-        public CRN Grantor { get; set; }
+        public CPN Grantor { get; set; }
         
         [JsonProperty("action")]
         [JsonConverter(typeof(SingleOrArrayConverter<ResourceAction>))]
         public List<ResourceAction> Actions { get; set; }
 
-        public static PermissionGrant From(CRN grantor) => new PermissionGrant() { Grantor = grantor };
+        public static PermissionGrant From(CPN grantor) => new PermissionGrant() { Grantor = grantor };
 
-        public PermissionGrant To(CRN principal)
+        public PermissionGrant To(CPN principal)
         {
             Principal = principal;
             return this;

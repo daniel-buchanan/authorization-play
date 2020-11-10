@@ -14,7 +14,7 @@ namespace authorization_play.Test
             .WithExpiry(DateTimeOffset.MinValue.AddMinutes(1))
             .WithResources(PermissionTicketResource.ForResource(Resources.Farm.Identifier));
         private const string ExistingJwt =
-            "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJpZGVudCI6ImNybjp1c2VyLzQyIiwiZXhwIjo2MjEzNTU5Njc0MCwicmVzb3VyY2UiOlt7InJlc291cmNlIjoiY3JuOmZhcm0vMTIzNCIsInNjaGVtYSI6bnVsbCwiYWN0aW9uIjpbXX1dfQ.ECfKAx-0bHusQLel2Ad-L-VlxfbsehylgrTgD0y2u0tTd1XbeyKr5ogcbakC_DKV949MKWFjNC0FMOEWG5mvHQ";
+            "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJpZGVudCI6ImNwbjp1c2VyLzQyIiwiZXhwIjo2MjEzNTU5Njc0MCwicmVzb3VyY2UiOlt7InJlc291cmNlIjoiY3JuOmZhcm0vMTIzNCIsInNjaGVtYSI6bnVsbCwiYWN0aW9uIjpbXX1dfQ.zAOv8nYtRYGDpVbNddd8S15Hy4xwXoXk4CMi--F5kSAwu-NG6f01e-8qoPfLH-UTk7OKY-B-PNaiifKVkePOhQ";
 
         [Fact]
         public void ToJwtSuccessful()
@@ -32,7 +32,7 @@ namespace authorization_play.Test
             // Arrange
             var json = @"{
             ""exp"": -62135596740,
-            ""ident"": ""crn:user/42"",
+            ""ident"": ""cpn:user/42"",
             ""resource"": [
             {
                 ""resource"": ""crn:farm/1234"",

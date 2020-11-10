@@ -50,12 +50,12 @@ namespace authorization_play.Api.Controllers
         [Route("{primary}/relations")]
         public IActionResult AddRelation([FromRoute] string id, [FromBody] string relation)
         {
-            var parent = CRN.FromValue(id);
+            var parent = CPN.FromValue(id);
             var found = this.storage.Find(parent).FirstOrDefault();
 
             if (found == null) return NotFound();
             
-            var child = CRN.FromValue(relation);
+            var child = CPN.FromValue(relation);
             if (!this.storage.AddRelation(parent, child))
                 return NoContent();
 

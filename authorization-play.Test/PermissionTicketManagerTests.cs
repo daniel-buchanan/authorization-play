@@ -195,7 +195,7 @@ namespace authorization_play.Test
             yield return new object[] { string.Empty, false };
             yield return new object[] { @"{
                 ""exp"": -62135596740,
-                ""ident"": ""crn:user/42"",
+                ""ident"": ""cpn:user/42"",
                 ""resource"": [
                     {
                         ""resource"": ""crn:farm/1234"",
@@ -206,7 +206,7 @@ namespace authorization_play.Test
             }", false };
             yield return new object[] { @"{
                 ""exp"": 62135596740,
-                ""ident"": ""crn:user/42"",
+                ""ident"": ""cpn:user/42"",
                 ""resource"": [
                     {
                         ""resource"": ""crn:farm/1234"",
@@ -238,7 +238,7 @@ namespace authorization_play.Test
         {
             yield return new object[]
             {
-                "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJpZGVudCI6ImNybjp1c2VyLzQyIiwiZXhwIjo2MjEzNTU5Njc0MCwicmVzb3VyY2UiOlt7InJlc291cmNlIjoiY3JuOmZhcm0vMTIzNCIsInNjaGVtYSI6ImNzbjphZy1kYXRhOmhlcmQ6bWlsay1waWNrdXAiLCJhY3Rpb24iOlsiaWFtOm93bmVyIl19XX0.LdjQG7fE75oOghEJUwVZ8uSfMdYEvb9B6HIIBvs3MM3cmCpYX5Aysf8MOChd9JV3UtRZi9GeChOEjFNv3eA6-w",
+                "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJpZGVudCI6ImNwbjp1c2VyLzQyIiwiZXhwIjo2MjEzNTU5Njc0MCwicmVzb3VyY2UiOlt7InJlc291cmNlIjoiY3JuOmZhcm0vMTIzNCIsInNjaGVtYSI6ImNzbjphZy1kYXRhOmhlcmQ6bWlsay1waWNrdXAiLCJhY3Rpb24iOlsiaWFtOm93bmVyIl19XX0.XW63uxPIZdDAsvRlBxq_dLLqgzbIkYdrBPWly3DQ_ENPPXGsV-6i7BXjtNo_U_sRczO34feAid_Q3wSsLYmucg",
                 true
             };
 

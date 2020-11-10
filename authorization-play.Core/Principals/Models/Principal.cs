@@ -9,23 +9,23 @@ namespace authorization_play.Core.Principals.Models
     [JsonConverter(typeof(PrincipalConverter))]
     public class Principal
     {
-        public static CRN Platform => CRN.FromValue("crn:internal:platform");
+        public static CPN Platform => CPN.FromValue("cpn:internal:platform");
 
         public int Id { get; set; }
 
-        public CRN Identifier { get; set; }
+        public CPN Identifier { get; set; }
         
-        public List<CRN> Children { get; set; }
+        public List<CPN> Children { get; set; }
 
-        public static Principal FromCrn(CRN identifier) => new Principal()
+        public static Principal FromCrn(CPN identifier) => new Principal()
         {
             Identifier = identifier,
-            Children = new List<CRN>()
+            Children = new List<CPN>()
         };
 
-        public Principal WithChildren(params CRN[] children)
+        public Principal WithChildren(params CPN[] children)
         {
-            Children = children?.ToList() ?? new List<CRN>();
+            Children = children?.ToList() ?? new List<CPN>();
             return this;
         }
     }

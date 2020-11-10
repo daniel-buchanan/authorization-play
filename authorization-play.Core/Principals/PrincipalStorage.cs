@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net.Sockets;
 using authorization_play.Core.Models;
 using authorization_play.Core.Principals.Models;
 using authorization_play.Persistance;
@@ -13,11 +12,11 @@ namespace authorization_play.Core.Principals
     {
         IEnumerable<Principal> All();
         Principal GetById(int id);
-        IEnumerable<Principal> Find(CRN principal);
-        IEnumerable<Principal> FindParents(CRN principal);
+        IEnumerable<Principal> Find(CPN principal);
+        IEnumerable<Principal> FindParents(CPN principal);
         void Add(Principal principal);
-        bool AddRelation(CRN parent, CRN child);
-        void Remove(CRN principal);
+        bool AddRelation(CPN parent, CPN child);
+        void Remove(CPN principal);
         void Remove(int id);
     }
 
@@ -38,7 +37,7 @@ namespace authorization_play.Core.Principals
             return ToModel(found);
         }
 
-        public IEnumerable<Principal> Find(CRN principal)
+        public IEnumerable<Principal> Find(CPN principal)
         {
             if (principal.IncludesWildcard) return FindByWildcard(principal);
             return GetQuery()
@@ -47,15 +46,15 @@ namespace authorization_play.Core.Principals
                 .Select(ToModel);
         }
 
-        private IEnumerable<Principal> FindByWildcard(CRN principal)
+        private IEnumerable<Principal> FindByWildcard(CPN principal)
         {
             var all = GetQuery().ToList();
             return all
-                .Where(p => principal.IsWildcardMatch(CRN.FromValue(p.CanonicalName)))
+                .Where(p => principal.IsWildcardMatch(CPN.FromValue(p.CanonicalName)))
                 .Select(ToModel);
         }
 
-        public IEnumerable<Principal> FindParents(CRN principal)
+        public IEnumerable<Principal> FindParents(CPN principal)
         {
             if(principal.IncludesWildcard) 
                 throw new ArgumentException("Parentage search for principal cannot include wildcards");
@@ -96,7 +95,7 @@ namespace authorization_play.Core.Principals
             this.context.SaveChanges();
         }
 
-        public bool AddRelation(CRN parent, CRN child)
+        public bool AddRelation(CPN parent, CPN child)
         {
             var found = this.context.Principals.FirstOrDefault(p => p.CanonicalName == parent.Value);
             if (found == null) return false;
@@ -105,7 +104,7 @@ namespace authorization_play.Core.Principals
             return true;
         }
 
-        public void Remove(CRN principal)
+        public void Remove(CPN principal)
         {
             var found = this.context.Principals.FirstOrDefault(p => p.CanonicalName == principal.Value);
             if (found == null) return;
@@ -121,7 +120,7 @@ namespace authorization_play.Core.Principals
             this.context.SaveChanges();
         }
 
-        private void AddRelation(Persistance.Models.Principal parent, CRN child)
+        private void AddRelation(Persistance.Models.Principal parent, CPN child)
         {
             var found = this.context.Principals.FirstOrDefault(p => p.CanonicalName == child.Value);
             if (found == null) return;
@@ -137,8 +136,8 @@ namespace authorization_play.Core.Principals
             if (entity == null) return null;
             return new Principal()
             {
-                Identifier = CRN.FromValue(entity.CanonicalName),
-                Children = entity.ChildRelations.Select(r => CRN.FromValue(r.Child.CanonicalName)).ToList()
+                Identifier = CPN.FromValue(entity.CanonicalName),
+                Children = entity.ChildRelations.Select(r => CPN.FromValue(r.Child.CanonicalName)).ToList()
             };
         }
 

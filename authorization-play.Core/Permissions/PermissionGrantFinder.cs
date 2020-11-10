@@ -6,8 +6,8 @@ namespace authorization_play.Core.Permissions
 {
     public interface IPermissionGrantFinder
     {
-        IEnumerable<PermissionGrant> Find(CRN principal, CSN schema);
-        IEnumerable<PermissionGrant> Find(CRN principal);
+        IEnumerable<PermissionGrant> Find(CPN principal, CSN schema);
+        IEnumerable<PermissionGrant> Find(CPN principal);
     }
     public class PermissionGrantFinder : IPermissionGrantFinder
     {
@@ -18,9 +18,9 @@ namespace authorization_play.Core.Permissions
             this.storage = storage;
         }
 
-        public IEnumerable<PermissionGrant> Find(CRN principal, CSN schema) =>
+        public IEnumerable<PermissionGrant> Find(CPN principal, CSN schema) =>
             this.storage.GetByPrincipalAndSchema(principal, schema);
 
-        public IEnumerable<PermissionGrant> Find(CRN principal) => this.storage.GetByPrincipal(principal);
+        public IEnumerable<PermissionGrant> Find(CPN principal) => this.storage.GetByPrincipal(principal);
     }
 }

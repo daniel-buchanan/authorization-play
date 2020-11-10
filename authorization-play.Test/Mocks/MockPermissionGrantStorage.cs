@@ -21,10 +21,10 @@ namespace authorization_play.Test.Mocks
 
         public void Remove(PermissionGrant grant) => this.grants.Remove(grant);
 
-        public IEnumerable<PermissionGrant> GetByPrincipal(CRN principal) =>
+        public IEnumerable<PermissionGrant> GetByPrincipal(CPN principal) =>
             this.grants.Where(g => g.Principal == principal);
 
-        public IEnumerable<PermissionGrant> GetByPrincipalAndSchema(CRN principal, CSN schema) =>
+        public IEnumerable<PermissionGrant> GetByPrincipalAndSchema(CPN principal, CSN schema) =>
             this.grants.Where(g => g.Principal == principal && g.Schema == schema);
     }
 }

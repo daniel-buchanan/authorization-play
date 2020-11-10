@@ -35,7 +35,7 @@ namespace authorization_play.Core.Permissions.Models
 
         public static PermissionValidationResponse InvalidFromResourceValidation(
             PermissionTicketRequest ticketRequest,
-            ValidationResult<CRN, ResourceAction, CRN> result) =>
+            ValidationResult<CRN, ResourceAction, CPN> result) =>
             new PermissionValidationResponse()
             {
                 TicketRequest = ticketRequest,

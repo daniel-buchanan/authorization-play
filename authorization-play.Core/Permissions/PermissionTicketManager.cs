@@ -9,7 +9,7 @@ namespace authorization_play.Core.Permissions
     public interface IPermissionTicketManager
     {
         PermissionTicket Request(params PermissionTicketRequest[] request);
-        void Revoke(CRN resource, CRN principal, CSN schema = null);
+        void Revoke(CRN resource, CPN principal, CSN schema = null);
         void Revoke(string hash);
         void Revoke(PermissionTicket ticket);
         bool Validate(string input, string secret = null);
@@ -56,7 +56,7 @@ namespace authorization_play.Core.Permissions
             return ticket;
         }
 
-        public void Revoke(CRN resource, CRN principal, CSN schema = null)
+        public void Revoke(CRN resource, CPN principal, CSN schema = null)
         {
             var found = this.storage.FindBy(it =>
                 it.Principal == principal && 

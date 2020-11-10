@@ -74,21 +74,21 @@ namespace authorization_play.Core.Permissions
             return PermissionValidationResponse.From(request, allowedResources, deniedResources);
         }
 
-        private ValidationResult<CRN, ResourceAction, CRN> ValidateResources(IEnumerable<Resource> resources, PermissionTicketRequest ticketRequest)
+        private ValidationResult<CRN, ResourceAction, CPN> ValidateResources(IEnumerable<Resource> resources, PermissionTicketRequest ticketRequest)
         {
             foreach (var r in resources)
             {
                 if (!Validator.TryValidate(() => this.resourceValidator.Validate(r.Identifier), out var resultResource))
-                    return ValidationResult<CRN, ResourceAction, CRN>.Invalid(r.Identifier, ticketRequest.Action, ticketRequest.Principal, resultResource.Reason);
+                    return ValidationResult<CRN, ResourceAction, CPN>.Invalid(r.Identifier, ticketRequest.Action, ticketRequest.Principal, resultResource.Reason);
 
                 if (!Validator.TryValidate(() => this.resourceValidator.ValidateAction(ticketRequest.Action), out var resultAction))
-                    return ValidationResult<CRN, ResourceAction, CRN>.Invalid(ticketRequest.Resource, ticketRequest.Action, ticketRequest.Principal, resultAction.Reason);
+                    return ValidationResult<CRN, ResourceAction, CPN>.Invalid(ticketRequest.Resource, ticketRequest.Action, ticketRequest.Principal, resultAction.Reason);
 
                 if (!Validator.TryValidate(() => this.resourceValidator.Validate(r.Identifier, ticketRequest.Action), out var resultActionOnResource))
-                    return ValidationResult<CRN, ResourceAction, CRN>.Invalid(ticketRequest.Resource, ticketRequest.Action, ticketRequest.Principal, resultActionOnResource.Reason);
+                    return ValidationResult<CRN, ResourceAction, CPN>.Invalid(ticketRequest.Resource, ticketRequest.Action, ticketRequest.Principal, resultActionOnResource.Reason);
             }
 
-            return ValidationResult<CRN, ResourceAction, CRN>.Valid(ticketRequest.Resource, ticketRequest.Action, ticketRequest.Principal);
+            return ValidationResult<CRN, ResourceAction, CPN>.Valid(ticketRequest.Resource, ticketRequest.Action, ticketRequest.Principal);
         }
     }
 }

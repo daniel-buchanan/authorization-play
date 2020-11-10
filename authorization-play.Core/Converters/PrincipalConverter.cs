@@ -20,16 +20,16 @@ namespace authorization_play.Core.Converters
 
             if (token.Type == JTokenType.String)
             {
-                var value = serializer.Deserialize<CRN>(token.CreateReader());
+                var value = serializer.Deserialize<CPN>(token.CreateReader());
                 return new Principal() { Identifier = value };
             }
 
             try
             {
-                if (token.Value<CRN>() == default(CRN)) return null;
+                if (token.Value<CRN>() == default(CPN)) return null;
                 return new Principal()
                 {
-                    Identifier = serializer.Deserialize<CRN>(reader)
+                    Identifier = serializer.Deserialize<CPN>(reader)
                 };
             }
             catch

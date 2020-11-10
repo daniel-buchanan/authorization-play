@@ -9,7 +9,7 @@ namespace authorization_play.Core.Permissions.Models
     {
         public CRN Resource { get; set; }
         public ResourceAction Action { get; set; }
-        public CRN Principal { get; set; }
+        public CPN Principal { get; set; }
         public CSN Schema { get; set; }
 
         public string GetHash()
@@ -26,7 +26,7 @@ namespace authorization_play.Core.Permissions.Models
     {
         public CRN Resource { get; set; }
         public ResourceAction Action { get; set; }
-        public CRN Principal { get; set; }
+        public CPN Principal { get; set; }
         public CSN Schema { get; set; }
 
         public static implicit operator PermissionTicketRequest(PermissionValidationRequest request)

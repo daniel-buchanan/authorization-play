@@ -4,11 +4,11 @@ namespace authorization_play.Core.DataProviders.Models
 {
     public class DataProviderPolicyRule
     {
-        public CRN Principal { get; set; }
+        public CPN Principal { get; set; }
         public bool Allow { get; set; }
         public bool Deny { get; set; }
 
-        public static DataProviderPolicyRule ForPrincipal(CRN principal) => new DataProviderPolicyRule()
+        public static DataProviderPolicyRule ForPrincipal(CPN principal) => new DataProviderPolicyRule()
         {
             Principal = principal
         };
