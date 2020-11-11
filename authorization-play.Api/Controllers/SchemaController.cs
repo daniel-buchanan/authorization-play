@@ -1,7 +1,6 @@
-﻿using System.Linq;
-using System.Web;
+﻿using System.Web;
+using authorization_play.Core;
 using authorization_play.Core.Models;
-using authorization_play.Persistance;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
 
@@ -11,31 +10,23 @@ namespace authorization_play.Api.Controllers
     [Route("schema")]
     public class SchemaController : ControllerBase
     {
-        private readonly AuthorizationPlayContext context;
+        private readonly IDataSchemaStorage storage;
 
-        public SchemaController(AuthorizationPlayContext context)
+        public SchemaController(IDataSchemaStorage storage)
         {
-            this.context = context;
+            this.storage = storage;
         }
 
         [HttpGet]
         public IActionResult Get()
         {
-            var found = this.context.Schemas.ToList().Select(s => CSN.FromValue(s.CanonicalName));
-            return Ok(found);
+            return Ok(this.storage.All());
         }
 
         [HttpPost]
-        public IActionResult Post([FromBody] Persistance.Models.Schema schema)
+        public IActionResult Post([FromBody] DataSchema schema)
         {
-            var toAdd = new Persistance.Models.Schema()
-            {
-                CanonicalName = schema.CanonicalName,
-                Description = schema.Description,
-                DisplayName = schema.DisplayName
-            };
-            this.context.Add(toAdd);
-            this.context.SaveChanges();
+            this.storage.Add(schema);
             return Ok();
         }
 
@@ -45,10 +36,7 @@ namespace authorization_play.Api.Controllers
         public IActionResult Delete(string identifier)
         {
             identifier = HttpUtility.UrlDecode(identifier);
-            var found = this.context.Schemas.FirstOrDefault(s => s.CanonicalName == identifier);
-            if (found == null) return NotFound();
-            this.context.Remove(found);
-            this.context.SaveChanges();
+            this.storage.Remove(CSN.FromValue(identifier));
             return Ok();
         }
     }

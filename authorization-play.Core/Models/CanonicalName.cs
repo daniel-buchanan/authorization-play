@@ -12,6 +12,7 @@ namespace authorization_play.Core.Models
 
         private string[] parts = null;
 
+        [JsonIgnore]
         protected abstract string Prefix { get; }
 
         public string Value { get; private set; }
@@ -20,6 +21,7 @@ namespace authorization_play.Core.Models
         public bool IsValid => !string.IsNullOrWhiteSpace(Value) &&
                                Value.StartsWith(Prefix);
 
+        [JsonIgnore]
         public bool IncludesWildcard => Parts.Any(p => p.Contains(Wildcard));
 
         public IEnumerable<string> Parts

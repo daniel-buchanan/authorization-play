@@ -31,6 +31,7 @@ namespace authorization_play.Test.Mocks
             this.policies.RemoveAll(p => p.Provider == identifier && p.Schema == schema);
 
         public IEnumerable<DataProvider> All() => this.providers.AsReadOnly();
+        public IEnumerable<DataSource> GetSources(CRN identifier) => this.sources.Where(s => s.Provider == identifier);
 
         public IEnumerable<DataProviderPolicy> GetPolicies(CRN identifier) =>
             this.policies.Where(p => p.Provider == identifier);

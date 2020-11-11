@@ -15,6 +15,7 @@ namespace authorization_play.Core.DataProviders
         void Remove(CRN identifier);
         void RemovePolicy(CRN identifier, CSN schema);
         IEnumerable<DataProvider> All();
+        IEnumerable<DataSource> GetSources(CRN identifier);
         IEnumerable<DataProviderPolicy> GetPolicies(CRN identifier);
         IEnumerable<DataProviderPolicy> GetPoliciesForSchema(CSN schema);
     }
@@ -47,7 +48,7 @@ namespace authorization_play.Core.DataProviders
 
         public void AddSource(DataSource source)
         {
-            var provider = this.context.DataProviders.FirstOrDefault(p => p.CanonicalName == source.DataProvider.ToString());
+            var provider = this.context.DataProviders.FirstOrDefault(p => p.CanonicalName == source.Provider.ToString());
 
             if (provider == null) return;
 
@@ -118,6 +119,19 @@ namespace authorization_play.Core.DataProviders
                 Identifier = CRN.FromValue(p.CanonicalName),
                 Name = p.Name
             });
+        }
+
+        public IEnumerable<DataSource> GetSources(CRN identifier)
+        {
+            return this.context.DataSources
+                .Include(x => x.Provider)
+                .Where(s => s.Provider.CanonicalName == identifier.ToString())
+                .ToList()
+                .Select(s => new DataSource()
+                {
+                    Identifier = CRN.FromValue(s.CanonicalName),
+                    Provider = CRN.FromValue(s.Provider.CanonicalName)
+                });
         }
 
         public IEnumerable<DataProviderPolicy> GetPolicies(CRN identifier)

@@ -12,21 +12,20 @@ namespace authorization_play.Api.Controllers
         private const string Secret = "secret";
         private readonly IPermissionTicketManager manager;
 
-        public TicketController(IPermissionTicketStorage storage,
-            IPermissionTicketManager manager)
+        public TicketController(IPermissionTicketManager manager)
         {
             this.manager = manager;
         }
 
         [HttpPost]
-        [Route("ticketRequest")]
+        [Route("request")]
         [SwaggerResponse(200, "A JWT Permissions Ticket", typeof(string))]
         [SwaggerResponse(400, "A ticket was not able to be issued.", typeof(string))]
         public IActionResult RequestTicket(PermissionTicketRequest[] request)
         {
             var ticket = this.manager.Request(request);
             if(!ticket.IsValid)
-                return BadRequest("Invalid TicketRequest");
+                return BadRequest("Invalid Request");
 
             return Content(ticket.ToJwt(Secret));
         }
@@ -46,7 +45,7 @@ namespace authorization_play.Api.Controllers
         [Route("validate")]
         [SwaggerResponse(200, "The validated Ticket", typeof(PermissionTicket))]
         [SwaggerResponse(400, "The provided ticket is invalid", typeof(string))]
-        public IActionResult Validate([FromHeader(Name = "X-PemTicket")] string ticket)
+        public IActionResult Validate([FromHeader(Name = "X-Permission-Ticket")] string ticket)
         {
             var valid = this.manager.Validate(ticket, Secret);
             if (valid) return Ok(PermissionTicket.FromJwt(ticket, Secret));

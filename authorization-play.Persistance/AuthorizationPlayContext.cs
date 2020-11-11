@@ -23,6 +23,8 @@ namespace authorization_play.Persistance
         public DbSet<Tag> Tags { get; set; }
         public DbSet<DataProvider> DataProviders { get; set; }
         public DbSet<DataSource> DataSources { get; set; }
+        public DbSet<DataSourceConnection> DataSourceConnections { get; set; }
+        public DbSet<DataSourceResourceConnection> DataSourceResourceConnections { get; set; }
         public DbSet<DataProviderPolicy> DataProviderPolicies { get; set; }
         public DbSet<DataProviderPolicyItem> DataProviderPolicyItems { get; set; }
 
@@ -31,7 +33,9 @@ namespace authorization_play.Persistance
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            Resource.OnModelCreating(modelBuilder);
             ResourceAction.OnModelCreating(modelBuilder);
+            Schema.OnModelCreating(modelBuilder);
             DataProviderPolicyItem.OnModelCreating(modelBuilder);
             PrincipalRelation.OnModelCreating(modelBuilder);
 
@@ -42,6 +46,9 @@ namespace authorization_play.Persistance
             PermissionGrantResource.OnModelCreating(modelBuilder);
             PermissionGrantResourceAction.OnModelCreating(modelBuilder);
             PermissionGrantTag.OnModelCreating(modelBuilder);
+
+            DataSourceConnection.OnModelCreating(modelBuilder);
+            DataSourceResourceConnection.OnModelCreating(modelBuilder);
 
             base.OnModelCreating(modelBuilder);
         }

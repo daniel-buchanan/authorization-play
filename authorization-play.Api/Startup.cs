@@ -1,3 +1,4 @@
+using authorization_play.Core;
 using authorization_play.Core.DataProviders;
 using authorization_play.Core.Permissions;
 using authorization_play.Core.Principals;
@@ -27,6 +28,7 @@ namespace authorization_play.Api
         {
             services.AddDbContext<AuthorizationPlayContext>();
             services.AddScoped<IPrincipalStorage, PrincipalStorage>();
+            services.AddScoped<IDataSchemaStorage, DataSchemaStorage>();
             services.AddScoped<IDataProviderStorage, DataProviderStorage>();
             services.AddScoped<IDataProviderPolicyApplicator, DataProviderPolicyApplicator>();
             services.AddScoped<IResourceStorage, ResourceStorage>();
