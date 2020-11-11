@@ -5,6 +5,7 @@ using Newtonsoft.Json;
 
 namespace authorization_play.Core.Resources.Models
 {
+    [JsonConverter(typeof(ResourceConverter))]
     public class Resource
     {
         public Resource() { }
@@ -15,10 +16,12 @@ namespace authorization_play.Core.Resources.Models
             ValidActions = new List<ResourceAction>();
         }
 
-        public CRN Identifier { get; set; }
+        [JsonProperty("identifier")]
+        public CRN Identifier { get; }
 
+        [JsonProperty("action")]
         [JsonConverter(typeof(SingleOrArrayConverter<ResourceAction>))]
-        public List<ResourceAction> ValidActions { get; set; }
+        public List<ResourceAction> ValidActions { get; }
 
         public static bool operator ==(Resource a, Resource b) => a?.Identifier == b?.Identifier;
 
@@ -35,6 +38,7 @@ namespace authorization_play.Core.Resources.Models
 
         public Resource WithActions(params ResourceAction[] actions)
         {
+            if (actions == null) return this;
             ValidActions.AddRange(actions);
             return this;
         }

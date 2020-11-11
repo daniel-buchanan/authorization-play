@@ -21,16 +21,14 @@ namespace authorization_play.Core.Converters
             if (token.Type == JTokenType.String)
             {
                 var value = serializer.Deserialize<CPN>(token.CreateReader());
-                return new Principal() { Identifier = value };
+                return Principal.From(value);
             }
 
             try
             {
                 if (token.Value<CRN>() == default(CPN)) return null;
-                return new Principal()
-                {
-                    Identifier = serializer.Deserialize<CPN>(reader)
-                };
+                var value = serializer.Deserialize<CPN>(reader);
+                return Principal.From(value);
             }
             catch
             {

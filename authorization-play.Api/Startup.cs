@@ -1,5 +1,6 @@
 using authorization_play.Core.DataProviders;
 using authorization_play.Core.Permissions;
+using authorization_play.Core.Principals;
 using authorization_play.Core.Resources;
 using authorization_play.Persistance;
 using Microsoft.AspNetCore.Builder;
@@ -25,6 +26,7 @@ namespace authorization_play.Api
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<AuthorizationPlayContext>();
+            services.AddScoped<IPrincipalStorage, PrincipalStorage>();
             services.AddScoped<IDataProviderStorage, DataProviderStorage>();
             services.AddScoped<IDataProviderPolicyApplicator, DataProviderPolicyApplicator>();
             services.AddScoped<IResourceStorage, ResourceStorage>();

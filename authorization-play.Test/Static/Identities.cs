@@ -19,11 +19,11 @@ namespace authorization_play.Test.Static
 
         public static IPrincipalStorage Setup(this IPrincipalStorage storage)
         {
-            storage.Add(Principal.FromCrn(Admin));
-            storage.Add(Principal.FromCrn(DanielB));
-            storage.Add(Principal.FromCrn(Andre));
-            storage.Add(Principal.FromCrn(Organisations.Fonterra));
-            storage.Add(Principal.FromCrn(Organisations.OpenCountry));
+            storage.Add(Principal.From(Admin));
+            storage.Add(Principal.From(DanielB));
+            storage.Add(Principal.From(Andre));
+            storage.Add(Principal.From(Organisations.Fonterra));
+            storage.Add(Principal.From(Organisations.OpenCountry));
             return storage;
         }
     }

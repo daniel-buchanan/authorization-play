@@ -134,11 +134,8 @@ namespace authorization_play.Core.Principals
         private Principal ToModel(Persistance.Models.Principal entity)
         {
             if (entity == null) return null;
-            return new Principal()
-            {
-                Identifier = CPN.FromValue(entity.CanonicalName),
-                Children = entity.ChildRelations.Select(r => CPN.FromValue(r.Child.CanonicalName)).ToList()
-            };
+            return Principal.From(CPN.FromValue(entity.CanonicalName))
+                .WithChildren(entity.ChildRelations.Select(r => CPN.FromValue(r.Child.CanonicalName)).ToArray());
         }
 
         private IQueryable<Persistance.Models.Principal> GetQuery() =>

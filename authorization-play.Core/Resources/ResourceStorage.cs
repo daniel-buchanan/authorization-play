@@ -76,11 +76,9 @@ namespace authorization_play.Core.Resources
 
         private Resource ToModel(Persistance.Models.Resource resource)
         {
-            return new Resource()
-            {
-                Identifier = CRN.FromValue(resource.CanonicalName),
-                ValidActions = resource.Actions.Select(a => ResourceAction.FromValue(a.Action.CanonicalName)).ToList()
-            };
+            var identifier = CRN.FromValue(resource.CanonicalName);
+            var actions = resource.Actions.Select(a => ResourceAction.FromValue(a.Action.CanonicalName)).ToArray();
+            return Resource.FromIdentifier(identifier).WithActions(actions);
         }
 
         private IQueryable<Persistance.Models.Resource> GetQuery() => this.context.Resources
