@@ -25,6 +25,7 @@ namespace authorization_play.Api.Controllers
             return Ok(this.storage.All());
         }
 
+        [HttpGet]
         [Route("{identifier}/sources")]
         public IActionResult GetSources(string identifier)
         {
